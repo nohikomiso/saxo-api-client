@@ -27,6 +27,11 @@ as a JSON object with the following structure:
 Usage:
     uv run python libs/saxo_openapi/samples/verify_session_diag.py
 
+    # 調査時: 各 client.request() の送受信を api_traces/ に保存
+    SAXO_OPENAPI_TRACE=1 SAXO_OPENAPI_TRACE_DIR=api_traces \\
+      uv run python libs/saxo_openapi/samples/verify_session_diag.py
+    # 手順の詳細: docs/saxo-api-research-rhythm.md（リポジトリルート）
+
 Requirements:
     - .env file with SAXO_24H_TOKEN environment variable
     - saxo_openapi library installed

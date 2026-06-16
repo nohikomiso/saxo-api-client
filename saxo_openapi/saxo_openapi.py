@@ -4,12 +4,14 @@ import json
 import logging
 import time
 from collections.abc import Iterator
+from pathlib import Path
 from threading import Lock
 from typing import Any
 
 import requests  # type: ignore
 
 from .exceptions import OpenAPIError
+from .trace import ApiTraceWriter, resolve_trace_writer
 
 ITER_LINES_CHUNKSIZE = 60
 
@@ -118,6 +120,8 @@ class API:
         environment: str = "simulation",
         headers: dict[str, str] | None = None,
         request_params: dict[str, Any] | None = None,
+        trace_dir: str | Path | None = None,
+        trace_enabled: bool | None = None,
     ) -> None:
         """Instantiate an API-client instance of saxo_openapi API wrapper.
 
@@ -149,6 +153,14 @@ class API:
             See specs of the requests module for full details of possible
             parameters.
 
+        trace_dir : str or Path, optional
+            Directory root for API exchange traces (e.g. ``api_traces``).
+            When set, tracing is enabled unless ``trace_enabled=False``.
+
+        trace_enabled : bool, optional
+            Force trace on/off. When ``None``, uses environment variable
+            ``SAXO_OPENAPI_TRACE`` (1/true/yes/on).
+
         .. warning::
             parameters belonging to a request need to be set on the
             requestinstance and are NOT passed via the client.
@@ -178,6 +190,8 @@ class API:
         if headers:
             self.client.headers.update(headers)
             logger.info("applying headers %s", ",".join(headers.keys()))
+
+        self._trace_writer: ApiTraceWriter | None = resolve_trace_writer(trace_dir, trace_enabled)
 
     @property
     def request_params(self) -> dict[str, Any]:
@@ -481,27 +495,54 @@ class API:
         # which API to access ?
         if not (hasattr(endpoint, "STREAM") and endpoint.STREAM is True):
             url = mk_endpoint(endpoint, self.environment, "api")
+            pending = None
+            if self._trace_writer is not None:
+                pending = self._trace_writer.begin(endpoint, method=method, url=url, request_args=request_args)
 
-            response = self.__request(method, url, request_args, headers=headers)
-            if hasattr(endpoint, "RESPONSE_DATA") and endpoint.RESPONSE_DATA is None:
-                content = None
+            started = time.perf_counter()
+            try:
+                response = self.__request(method, url, request_args, headers=headers)
+                if hasattr(endpoint, "RESPONSE_DATA") and endpoint.RESPONSE_DATA is None:
+                    content = None
 
-            elif not (hasattr(endpoint, "RESPONSE_DATA") and endpoint.RESPONSE_DATA == "text"):
-                # if not explicitely set to 'text' asume JSON
-                content = response.content.decode("utf-8")
-                content = json.loads(content)
+                elif not (hasattr(endpoint, "RESPONSE_DATA") and endpoint.RESPONSE_DATA == "text"):
+                    # if not explicitely set to 'text' asume JSON
+                    content = response.content.decode("utf-8")
+                    content = json.loads(content)
 
-            else:
-                content = response.content.decode("utf-8")
+                else:
+                    content = response.content.decode("utf-8")
 
-            # update endpoint
-            endpoint.response = content
-            endpoint.status_code = response.status_code
+                if pending is not None and self._trace_writer is not None:
+                    elapsed_ms = (time.perf_counter() - started) * 1000.0
+                    self._trace_writer.write_success(
+                        pending,
+                        status_code=response.status_code,
+                        response_headers=response.headers,
+                        body=content,
+                        duration_ms=elapsed_ms,
+                    )
 
-            return content
+                # update endpoint
+                endpoint.response = content
+                endpoint.status_code = response.status_code
+
+                return content
+            except OpenAPIError as err:
+                if pending is not None and self._trace_writer is not None:
+                    elapsed_ms = (time.perf_counter() - started) * 1000.0
+                    self._trace_writer.write_openapi_error(pending, exc=err, duration_ms=elapsed_ms)
+                raise
+            except requests.RequestException as err:
+                if pending is not None and self._trace_writer is not None:
+                    elapsed_ms = (time.perf_counter() - started) * 1000.0
+                    self._trace_writer.write_request_exception(pending, exc=err, duration_ms=elapsed_ms)
+                raise
 
         else:
             url = mk_endpoint(endpoint, self.environment, "stream")
+            if self._trace_writer is not None:
+                self._trace_writer.write_stream_skipped(endpoint, url=url, method=method)
             endpoint.response = self.__stream_request(method, url, request_args, headers=headers)
             return endpoint.response
 

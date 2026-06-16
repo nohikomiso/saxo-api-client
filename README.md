@@ -67,6 +67,24 @@ rv = client.request(r)
 print(rv)
 ```
 
+### API 送受信トレース（調査・実験用）
+
+新機能や API 挙動の調査時は、クライアントで **リクエストとレスポンスのペア** をローカル JSON に保存できます（本番 01–05 では通常 OFF）。
+
+```bash
+export SAXO_OPENAPI_TRACE=1
+export SAXO_OPENAPI_TRACE_DIR=api_traces
+uv run python your_research_script.py
+```
+
+```python
+client = API(access_token=token, trace_dir="api_traces")  # 引数でも有効化可
+```
+
+- 保存先: `api_traces/{YYYYMMDD}/saxo_{endpoint}_{trace_id}.json`（gitignore 推奨）
+- 確定した証跡はリポジトリの `response/` へ手動で昇格（研究手順: リポジトリルート `docs/saxo-api-research-rhythm.md`）
+- トークン・AccountKey 等は自動マスク
+
 ---
 
 ## 🛠 推奨されるシステム構成

@@ -646,9 +646,9 @@ class API:
         try:
             logger.info(f"Attempting to reauthorize streaming context: {context_id}")
 
-            # ベースURLの構築
-            base_url = TRADING_ENVIRONMENTS[self.environment]["stream"]
-            path = "oapi/streaming/ws/authorize"
+            # ベースURLの構築 (再認証のPUTリクエストはストリーミングサーバーではなくAPIゲートウェイへ送る)
+            base_url = TRADING_ENVIRONMENTS[self.environment]["api"]
+            path = "streamingws/authorize"
 
             url = (
                 f"{base_url}/sim/openapi/{path}?contextid={context_id}"

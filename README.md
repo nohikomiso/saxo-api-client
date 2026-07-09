@@ -44,7 +44,12 @@ Please refer to the guides inside the `docs/` directory for detailed information
 
 ### Installation
 
-**Using pip**
+**Using pip (PyPI)**
+```bash
+pip install saxo-api-client
+```
+
+**Using pip (GitHub)**
 ```bash
 pip install git+https://github.com/nohikomiso/saxo-api-client.git
 ```
@@ -135,8 +140,8 @@ To maximize the benefits of this library and run 24/7 stable algorithmic trading
 ### 1. Separation of Auth and Trading Operations
 Run the authentication manager and the trading/data execution logic in separate, independent processes.
 
-- **Auth Service (using [Saxo-APY](https://github.com/nohikomiso/saxo-apy))**: Handles OAuth logins, keeps the session alive, and writes the latest token to a local file (e.g., `saxo_token.json`).
-- **Trading Services (using Saxo-OpenAPI)**: Simply reads the saved token file to execute commands like balance retrieval, price monitoring, or orders without needing to handle the OAuth flow directly.
+- **Auth Service (using `saxo_api_client.auth.SaxoAuthClient`)**: Handles OAuth logins, keeps the session alive, and writes the latest token to a local file (e.g., `saxo_token.json`).
+- **Trading Services (using saxo-api-client)**: Simply reads the saved token file to execute commands like balance retrieval, price monitoring, or orders without needing to handle the OAuth flow directly.
 
 ### 2. Advantages
 - **Robustness**: If an authentication issue occurs, the Auth Service handles recovery without needing to restart the active trading loops.

@@ -26,12 +26,12 @@ class SaxoClient:
     It completely hides the underlying "Command pattern" (Endpoint classes).
     """
 
-    def __init__(self, auth_client: Optional[SaxoAuthClient] = None, access_token: Optional[str] = None):
+    def __init__(self, auth_client: Optional[SaxoAuthClient] = None, access_token: Optional[str] = None, request_params: Optional[dict] = None):
         """
         Initialize the unified client.
         Either auth_client or access_token must be provided.
         """
-        self._api = API(access_token=access_token, auth_client=auth_client)
+        self._api = API(access_token=access_token, auth_client=auth_client, request_params=request_params)
         self._account_key = None
         self._instrument_cache: dict[str, dict] = {}
 
@@ -234,3 +234,38 @@ class SaxoClient:
         """Cancel an active order by ID."""
         r = tr.orders.CancelOrder(OrderId=order_id)
         return self._api.request(r)
+
+    # ---------------------------------------------------------
+    # Streaming & Subscriptions
+    # ---------------------------------------------------------
+    def add_price_subscription(self, context_id: str, reference_id: str, uic: int, asset_type: str, arguments: Optional[dict] = None) -> dict:
+        """Create a new price subscription."""
+        if arguments is None:
+            arguments = {"Uic": uic, "AssetType": asset_type}
+        
+        data = {
+            "ContextId": context_id,
+            "ReferenceId": reference_id,
+            "Arguments": arguments
+        }
+        r = tr.prices.CreatePriceSubscription(data=data)
+        return self._api.request(r)
+
+    def remove_price_subscription(self, context_id: str, reference_id: str) -> dict:
+        """Remove a specific price subscription."""
+        r = tr.prices.PriceSubscriptionRemove(ContextId=context_id, ReferenceId=reference_id)
+        return self._api.request(r)
+
+    def remove_all_subscriptions(self, context_id: str) -> dict:
+        """Remove all active subscriptions for a context."""
+        from saxo_openapi.endpoints.rootservices.subscriptions import RemoveMultipleActiveSubscriptions
+        r = RemoveMultipleActiveSubscriptions(ContextId=context_id, params={})
+        return self._api.request(r)
+
+    def get_price_quotes(self, uics: list[int], asset_type: str = "Stock") -> dict:
+        """Get snapshot of current prices (Quote field group)."""
+        uic_str = ",".join(map(str, uics))
+        params = {"Uics": uic_str, "FieldGroups": "Quote", "AssetType": asset_type}
+        r = tr.infoprices.InfoPrices(params=params)
+        return self._api.request(r)
+

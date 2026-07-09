@@ -81,19 +81,45 @@ class SaxoClient:
     def get_account_balance(self, client_key: Optional[str] = None) -> dict:
         """Get the current balance and margin details for the account."""
         kwargs = {"ClientKey": client_key} if client_key else {}
-        r = pf.balances.AccountBalancesMe(**kwargs)
+        r = pf.balances.AccountBalancesMe()
+        if kwargs:
+            r.params = kwargs
         return self._api.request(r)
 
-    def get_positions(self, client_key: Optional[str] = None) -> dict:
-        """Get all open net positions."""
-        kwargs = {"ClientKey": client_key} if client_key else {}
+    def get_positions(self, client_key: Optional[str] = None, field_groups: str = "PositionBase,PositionView,DisplayAndFormat,Greeks,UnderlyingDisplayAndFormat") -> dict:
+        """Get all open net positions with rich default fields for options trading."""
+        kwargs = {"FieldGroups": field_groups}
+        if client_key:
+            kwargs["ClientKey"] = client_key
         r = pf.netpositions.NetPositionsMe(**kwargs)
         return self._api.request(r)
 
-    def get_active_orders(self, client_key: Optional[str] = None, status: str = "Working") -> dict:
-        """Get a list of active (working) orders."""
-        kwargs = {"ClientKey": client_key, "Status": status} if client_key else {"Status": status}
+    def get_active_orders(self, client_key: Optional[str] = None, status: str = "Working", field_groups: str = "DisplayAndFormat,ExchangeInfo") -> dict:
+        """Get a list of active (working) orders with rich default fields."""
+        kwargs = {"Status": status, "FieldGroups": field_groups}
+        if client_key:
+            kwargs["ClientKey"] = client_key
         r = pf.orders.OrdersMe(**kwargs)
+        return self._api.request(r)
+
+    def get_positions_query(self, client_key: Optional[str] = None, account_key: Optional[str] = None, field_groups: str = "PositionBase,PositionView,DisplayAndFormat,Greeks,UnderlyingDisplayAndFormat") -> dict:
+        """Query individual positions (not net positions) with rich fields."""
+        kwargs = {"FieldGroups": field_groups}
+        if client_key:
+            kwargs["ClientKey"] = client_key
+        if account_key:
+            kwargs["AccountKey"] = account_key
+        r = pf.positions.PositionsQuery(params=kwargs)
+        return self._api.request(r)
+
+    def get_all_open_orders(self, client_key: Optional[str] = None, account_key: Optional[str] = None, field_groups: str = "DisplayAndFormat,ExchangeInfo") -> dict:
+        """Query all open orders across the account."""
+        kwargs = {"FieldGroups": field_groups}
+        if client_key:
+            kwargs["ClientKey"] = client_key
+        if account_key:
+            kwargs["AccountKey"] = account_key
+        r = pf.orders.GetAllOpenOrders(params=kwargs)
         return self._api.request(r)
 
     # ---------------------------------------------------------

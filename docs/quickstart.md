@@ -1,6 +1,6 @@
 # クイックスタートガイド
 
-5分で `saxo_openapi` ライブラリの基本的な使い方を習得できます。
+5分で `saxo_api_client` ライブラリの基本的な使い方を習得できます。
 
 ## 前提条件
 
@@ -12,12 +12,12 @@
 
 **pip を使用する場合**
 ```bash
-pip install git+https://github.com/nohikomiso/saxo-openapi.git
+pip install git+https://github.com/nohikomiso/saxo-api-client.git
 ```
 
 **uv を使用する場合**
 ```bash
-uv add git+https://github.com/nohikomiso/saxo-openapi.git
+uv add git+https://github.com/nohikomiso/saxo-api-client.git
 ```
 
 ## ステップ 2: アクセストークンの準備
@@ -37,8 +37,8 @@ export SAXO_ACCESS_TOKEN="your_access_token_here"
 ```python
 import json
 import os
-from saxo_openapi import API
-import saxo_openapi.endpoints.portfolio as pf
+from saxo_api_client import API
+import saxo_api_client.endpoints.portfolio as pf
 
 # 1. クライアントの初期化
 token = os.getenv("SAXO_ACCESS_TOKEN")
@@ -94,7 +94,7 @@ for account_data in rv.get('Data', []):
 注文作成を簡素化するヘルパークラス:
 
 ```python
-from saxo_openapi.contrib.orders import (
+from saxo_api_client.contrib.orders import (
     MarketOrderFxSpot,
     TakeProfitDetails,
     StopLossDetails,
@@ -129,7 +129,7 @@ HTTP 401 Unauthorized
 ### インポートエラー
 
 ```
-ModuleNotFoundError: No module named 'saxo_openapi'
+ModuleNotFoundError: No module named 'saxo_api_client'
 ```
 
 - ライブラリがインストールされているか確認:

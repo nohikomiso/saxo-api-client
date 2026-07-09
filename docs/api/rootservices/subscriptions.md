@@ -26,11 +26,11 @@ DELETE openapi/root/subscriptions/{ContextId}
 ### コード例
 
 ```python
-import saxo_openapi
+import saxo_api_client
 import json
 
 # clientのインスタンス化
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 
 # ContextIdと削除したいReferenceIdsを指定
 ContextId = "my_streaming_context"
@@ -42,7 +42,7 @@ params = {
 }
 
 # リクエストの作成と実行
-r = saxo_openapi.endpoints.rootservices.subscriptions.RemoveMultipleActiveSubscriptions(
+r = saxo_api_client.endpoints.rootservices.subscriptions.RemoveMultipleActiveSubscriptions(
     ContextId=ContextId,
     params=params
 )

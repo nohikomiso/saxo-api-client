@@ -6,7 +6,7 @@ Cache & Performance Verification Sample
 Measure API response times for repeated calls to check caching/network.
 
 Usage:
-    uv run libs/saxo_openapi/samples/verify_diagnostics_perf.py
+    uv run libs/saxo_api_client/samples/verify_diagnostics_perf.py
 """
 
 import json
@@ -21,9 +21,9 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 try:
-    import saxo_openapi
-    from saxo_openapi import API
-    from saxo_openapi.endpoints.referencedata import currencies
+    import saxo_api_client
+    from saxo_api_client import API
+    from saxo_api_client.endpoints.referencedata import currencies
 except ImportError:
     sys.exit(1)
 

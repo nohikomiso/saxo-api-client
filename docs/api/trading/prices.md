@@ -26,11 +26,11 @@
 #### Example
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.trading as tr
+import saxo_api_client
+import saxo_api_client.endpoints.trading as tr
 import json
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 data = {
     "Arguments": {
         "Uic": 21,
@@ -65,11 +65,11 @@ print(json.dumps(r.response, indent=2))
 #### Example
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.trading as tr
+import saxo_api_client
+import saxo_api_client.endpoints.trading as tr
 import json
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 ContextId = "Context_2023"
 ReferenceId = "Ref_Stock_21"
 r = tr.prices.MarginImpactRequest(ContextId=ContextId, ReferenceId=ReferenceId)
@@ -100,11 +100,11 @@ print(r.status_code)
 #### Example
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.trading as tr
+import saxo_api_client
+import saxo_api_client.endpoints.trading as tr
 import json
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 ContextId = "Context_2023"
 params = {"Tag": "MyTag"}
 r = tr.prices.PriceSubscriptionRemoveByTag(ContextId=ContextId, params=params)
@@ -133,11 +133,11 @@ print(r.status_code)
 #### Example
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.trading as tr
+import saxo_api_client
+import saxo_api_client.endpoints.trading as tr
 import json
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 ContextId = "Context_2023"
 ReferenceId = "Ref_Stock_21"
 r = tr.prices.PriceSubscriptionRemove(ContextId=ContextId, ReferenceId=ReferenceId)

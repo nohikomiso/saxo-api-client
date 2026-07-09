@@ -12,9 +12,9 @@
 
 ```python
 import json
-from saxo_openapi import API
-import saxo_openapi.endpoints.trading as tr
-from saxo_openapi.contrib.session import account_info
+from saxo_api_client import API
+import saxo_api_client.endpoints.trading as tr
+from saxo_api_client.contrib.session import account_info
 
 # 1. クライアントの初期化
 token = "YOUR_ACCESS_TOKEN"
@@ -47,7 +47,7 @@ except Exception as e:
 
 ## 解説
 
-1.  `saxo_openapi.endpoints.trading.orders.CancelOrders` クラスを使用します。
+1.  `saxo_api_client.endpoints.trading.orders.CancelOrders` クラスを使用します。
 2.  `OrderIds` パラメータには、キャンセルしたい注文IDをカンマ区切りの文字列で指定します。
 3.  `params` に `AccountKey` を指定する必要があります。
 4.  リクエストが成功すると、キャンセル受付の結果が返されます。

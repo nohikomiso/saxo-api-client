@@ -12,7 +12,7 @@ WARNING: This executes a MARKET ORDER which will trade immediately.
 Use only in Simulation/Demo environment.
 
 Usage:
-    uv run libs/saxo_openapi/samples/verify_cycle_trading_full.py
+    uv run libs/saxo_api_client/samples/verify_cycle_trading_full.py
 """
 
 import json
@@ -21,11 +21,11 @@ import os
 import sys
 import time
 
-import saxo_openapi.endpoints.portfolio as pf
-import saxo_openapi.endpoints.trading as tr
+import saxo_api_client.endpoints.portfolio as pf
+import saxo_api_client.endpoints.trading as tr
 from dotenv import load_dotenv
-from saxo_openapi import API
-from saxo_openapi.contrib.orders import MarketOrderFxSpot, tie_account_to_order
+from saxo_api_client import API
+from saxo_api_client.contrib.orders import MarketOrderFxSpot, tie_account_to_order
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -91,7 +91,7 @@ def main() -> None:
         # if netting_mode == 'FifoEndOfDay': use MarketCloseOrder (Exclusive Close)
         # if netting_mode == 'FifoRealTime': usage depends on API version/config
 
-        from saxo_openapi.contrib.orders import MarketCloseOrder
+        from saxo_api_client.contrib.orders import MarketCloseOrder
 
         close_order = MarketCloseOrder(
             PositionId=position_id,

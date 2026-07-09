@@ -2,7 +2,7 @@
 """Offline demo: API trace files are written without network calls.
 
 Usage:
-    uv run python libs/saxo_openapi/samples/verify_trace_offline.py
+    uv run python libs/saxo_api_client/samples/verify_trace_offline.py
 
 Writes one sample trace under ./api_traces/ (or SAXO_OPENAPI_TRACE_DIR).
 """
@@ -14,7 +14,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from saxo_openapi.trace import ApiTraceWriter, endpoint_label
+from saxo_api_client.trace import ApiTraceWriter, endpoint_label
 
 
 class _DemoEndpoint:

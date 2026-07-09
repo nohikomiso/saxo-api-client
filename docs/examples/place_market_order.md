@@ -15,9 +15,9 @@
 ```python
 import json
 import os
-from saxo_openapi import API
-from saxo_openapi.contrib.trader import SaxoTrader
-from saxo_openapi.definitions.orders import AssetType
+from saxo_api_client import API
+from saxo_api_client.contrib.trader import SaxoTrader
+from saxo_api_client.definitions.orders import AssetType
 
 # 1. クライアントの初期化
 token = os.getenv("SAXO_ACCESS_TOKEN", "YOUR_ACCESS_TOKEN")
@@ -51,13 +51,13 @@ except Exception as e:
 
 ```python
 import json
-from saxo_openapi import API
-import saxo_openapi.endpoints.trading as tr
-from saxo_openapi.contrib.orders import (
+from saxo_api_client import API
+import saxo_api_client.endpoints.trading as tr
+from saxo_api_client.contrib.orders import (
     MarketOrderFxSpot,
     tie_account_to_order
 )
-from saxo_openapi.contrib.session import account_info
+from saxo_api_client.contrib.session import account_info
 
 client = API(access_token="YOUR_ACCESS_TOKEN")
 

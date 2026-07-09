@@ -11,9 +11,9 @@
 
 ```python
 import json
-from saxo_openapi import API
-import saxo_openapi.endpoints.portfolio as pf
-from saxo_openapi.contrib.session import account_info
+from saxo_api_client import API
+import saxo_api_client.endpoints.portfolio as pf
+from saxo_api_client.contrib.session import account_info
 
 # 1. クライアントの初期化
 token = "YOUR_ACCESS_TOKEN"
@@ -60,7 +60,7 @@ except Exception as e:
 
 ## 解説
 
-1.  `saxo_openapi.endpoints.portfolio.balances.AccountBalances` クラスを使用します。
+1.  `saxo_api_client.endpoints.portfolio.balances.AccountBalances` クラスを使用します。
 2.  `params` に `AccountKey` を指定して、特定のアカウントの情報を取得します（指定しない場合はアクセス可能な全アカウントが返されます）。
 3.  レスポンスには多くのフィールドが含まれますが、特に重要なのは以下の通りです：
     *   `TotalValue`: 含み益を含めた現在の口座価値

@@ -12,11 +12,11 @@
 
 ```python
 import json
-from saxo_openapi import API
-import saxo_openapi.endpoints.portfolio as pf
-import saxo_openapi.endpoints.trading as tr
-from saxo_openapi.contrib.orders import MarketOrderFxSpot, tie_account_to_order
-from saxo_openapi.contrib.session import account_info
+from saxo_api_client import API
+import saxo_api_client.endpoints.portfolio as pf
+import saxo_api_client.endpoints.trading as tr
+from saxo_api_client.contrib.orders import MarketOrderFxSpot, tie_account_to_order
+from saxo_api_client.contrib.session import account_info
 
 # 1. クライアント初期化
 # ⚠️ セキュリティ注意: トークンは環境変数から読み込むことを推奨

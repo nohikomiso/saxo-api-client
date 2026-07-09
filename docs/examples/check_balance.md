@@ -5,14 +5,14 @@
 ## 前提条件
 
 *   有効なアクセストークン
-*   `saxo_openapi` ライブラリがインストールされていること
+*   `saxo_api_client` ライブラリがインストールされていること
 
 ## コード例
 
 ```python
 import json
-from saxo_openapi import API
-import saxo_openapi.endpoints.portfolio as pf
+from saxo_api_client import API
+import saxo_api_client.endpoints.portfolio as pf
 
 # 1. クライアントの初期化
 # ⚠️ セキュリティ注意: トークンは環境変数から読み込むことを推奨
@@ -48,6 +48,6 @@ except Exception as e:
 ## 解説
 
 1.  `API` クラスをアクセストークンで初期化します。
-2.  `saxo_openapi.endpoints.portfolio.balances.AccountBalancesMe` エンドポイントクラスをインスタンス化します。これは `/openapi/port/v1/balances/me` への GET リクエストを表します。
+2.  `saxo_api_client.endpoints.portfolio.balances.AccountBalancesMe` エンドポイントクラスをインスタンス化します。これは `/openapi/port/v1/balances/me` への GET リクエストを表します。
 3.  `client.request(r)` で API リクエストを送信し、レスポンス（JSON）を取得します。
 4.  レスポンスデータから必要な情報（口座ID、取引可能現金残高、通貨など）を抽出して表示します。

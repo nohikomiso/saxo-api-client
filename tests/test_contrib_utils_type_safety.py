@@ -3,18 +3,18 @@
 This test module verifies that contrib utility modules have proper type hints
 where applicable. Testing the following modules:
 
-- saxo_openapi.contrib.session: account_info, account_info2
-- saxo_openapi.contrib.ws.stream: decode_ws_msg
-- saxo_openapi.contrib.util.instrument_to_uic: InstrumentToUic
+- saxo_api_client.contrib.session: account_info, account_info2
+- saxo_api_client.contrib.ws.stream: decode_ws_msg
+- saxo_api_client.contrib.util.instrument_to_uic: InstrumentToUic
 
 Note: Task 7.3.5 is OPTIONAL. Skip tests if complex async types are needed.
 """
 
 import inspect
 
-from saxo_openapi.contrib import session
-from saxo_openapi.contrib.util import instrument_to_uic
-from saxo_openapi.contrib.ws import stream
+from saxo_api_client.contrib import session
+from saxo_api_client.contrib.util import instrument_to_uic
+from saxo_api_client.contrib.ws import stream
 
 
 class TestSessionFunctionsExist:
@@ -77,28 +77,28 @@ class TestContribUtilsImportsWork:
 
     def test_session_module_import(self):
         """Test session module can be imported."""
-        from saxo_openapi.contrib import session as s
+        from saxo_api_client.contrib import session as s
 
         assert s is not None
         assert hasattr(s, "account_info")
 
     def test_stream_module_import(self):
         """Test stream module can be imported."""
-        from saxo_openapi.contrib.ws import stream as st
+        from saxo_api_client.contrib.ws import stream as st
 
         assert st is not None
         assert hasattr(st, "decode_ws_msg")
 
     def test_instrument_to_uic_import(self):
         """Test InstrumentToUic can be imported."""
-        from saxo_openapi.contrib.util import InstrumentToUic
+        from saxo_api_client.contrib.util import InstrumentToUic
 
         assert InstrumentToUic is not None
         assert callable(InstrumentToUic)
 
     def test_instrument_to_uic_from_util(self):
         """Test InstrumentToUic import from util module."""
-        from saxo_openapi.contrib.util import instrument_to_uic as i2u
+        from saxo_api_client.contrib.util import instrument_to_uic as i2u
 
         assert i2u is not None
         assert hasattr(i2u, "InstrumentToUic")

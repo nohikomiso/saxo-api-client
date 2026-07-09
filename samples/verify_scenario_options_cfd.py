@@ -15,7 +15,7 @@ Endpoints:
     - POST /trade/v1/orders
 
 Usage:
-    uv run libs/saxo_openapi/samples/verify_scenario_options_cfd.py
+    uv run libs/saxo_api_client/samples/verify_scenario_options_cfd.py
 """
 
 import json
@@ -30,13 +30,13 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 try:
-    import saxo_openapi
-    from saxo_openapi import API
-    from saxo_openapi.endpoints.portfolio import accounts
-    from saxo_openapi.endpoints.referencedata import instruments
-    from saxo_openapi.endpoints.trading import optionschain, orders
+    import saxo_api_client
+    from saxo_api_client import API
+    from saxo_api_client.endpoints.portfolio import accounts
+    from saxo_api_client.endpoints.referencedata import instruments
+    from saxo_api_client.endpoints.trading import optionschain, orders
 except ImportError:
-    logger.error("saxo_openapi not installed.")
+    logger.error("saxo_api_client not installed.")
     sys.exit(1)
 
 

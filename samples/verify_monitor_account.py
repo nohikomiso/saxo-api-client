@@ -14,7 +14,7 @@ Endpoints:
     - GET /trade/v1/prices/instruments
 
 Usage:
-    uv run libs/saxo_openapi/samples/verify_monitor_account.py
+    uv run libs/saxo_api_client/samples/verify_monitor_account.py
 """
 
 import json
@@ -28,14 +28,14 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 try:
-    import saxo_openapi
-    from saxo_openapi import API
+    import saxo_api_client
+    from saxo_api_client import API
 
     # Adjust imports to likely locations if module structure changed
-    from saxo_openapi.endpoints.portfolio import accounts, balances
-    from saxo_openapi.endpoints.trading import prices
+    from saxo_api_client.endpoints.portfolio import accounts, balances
+    from saxo_api_client.endpoints.trading import prices
 except ImportError:
-    logger.error("saxo_openapi not installed.")
+    logger.error("saxo_api_client not installed.")
     sys.exit(1)
 
 
@@ -75,7 +75,7 @@ def main():
         # Spec 7.8.2 mentions `portfolio/margins.py`. It is in Category B.
         # Use simple balances if margins module not found, but try importing first.
         try:
-            from saxo_openapi.endpoints.portfolio import margins
+            from saxo_api_client.endpoints.portfolio import margins
 
             r_marg = margins.AccountMargins(AccountKey=account_key)
         except ImportError:

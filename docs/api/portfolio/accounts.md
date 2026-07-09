@@ -26,11 +26,11 @@
 #### 実行例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 import json
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 AccountKey = "..."
 r = pf.accounts.AccountDetails(AccountKey=AccountKey)
 client.request(r)
@@ -61,11 +61,11 @@ print(json.dumps(r.response, indent=2))
 #### 実行例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 import json
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 params = {}
 r = pf.accounts.AccountsMe(params=params)
 client.request(r)
@@ -96,11 +96,11 @@ print(json.dumps(r.response, indent=2))
 #### 実行例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 import json
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 params = {"ClientKey": "..."}
 r = pf.accounts.AccountListByClient(params=params)
 client.request(r)
@@ -134,11 +134,11 @@ print(json.dumps(r.response, indent=2))
 #### 実行例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 import json
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 AccountKey = "..."
 data = {"DisplayName": "MyTestName"}
 r = pf.accounts.AccountUpdate(AccountKey=AccountKey, data=data)
@@ -173,11 +173,11 @@ print(r.status_code)
 #### 実行例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 import json
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 AccountKey = "..."
 data = {'NewBalance': '1000000'}
 r = pf.accounts.AccountReset(AccountKey=AccountKey, data=data)
@@ -206,11 +206,11 @@ print(r.status_code)
 #### 実行例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 import json
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 data = {
     "Arguments": {
         "ClientKey": "..."
@@ -249,11 +249,11 @@ print(json.dumps(r.response, indent=2))
 #### 実行例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 import json
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 ContextId = "..."
 params = {"ClientKey": "..."}
 r = pf.accounts.SubscriptionRemoveByTag(ContextId=ContextId, params=params)
@@ -285,11 +285,11 @@ print(r.status_code)
 #### 実行例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 import json
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 ContextId = "..."
 ReferenceId = "..."
 r = pf.accounts.SubscriptionRemoveById(ContextId=ContextId, ReferenceId=ReferenceId)

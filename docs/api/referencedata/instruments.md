@@ -26,11 +26,11 @@ Saxo Trading プラットフォーム上のすべての金融商品とオプシ�
 #### Example
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.referencedata as rd
+import saxo_api_client
+import saxo_api_client.endpoints.referencedata as rd
 import json
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 params = {
     "AssetTypes": "Stock",
     "Keywords": "Apple"
@@ -62,11 +62,11 @@ print(json.dumps(r.response, indent=2))
 #### Example
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.referencedata as rd
+import saxo_api_client
+import saxo_api_client.endpoints.referencedata as rd
 import json
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 params = {
     "Uics": "21,22",
     "AssetTypes": "FxSpot"
@@ -100,11 +100,11 @@ print(json.dumps(r.response, indent=2))
 #### Example
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.referencedata as rd
+import saxo_api_client
+import saxo_api_client.endpoints.referencedata as rd
 import json
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 Uic = 22
 AssetType = "FxSpot"
 params = {"FieldGroups": ["OrderSetting"]}
@@ -136,11 +136,11 @@ print(json.dumps(r.response, indent=2))
 #### Example
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.referencedata as rd
+import saxo_api_client
+import saxo_api_client.endpoints.referencedata as rd
 import json
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 OptionRootId = "231"
 params = {"FieldGroups": ["DisplayAndFormat"]}
 r = rd.instruments.ContractoptionSpaces(OptionRootId=OptionRootId, params=params)
@@ -168,11 +168,11 @@ print(json.dumps(r.response, indent=2))
 #### Example
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.referencedata as rd
+import saxo_api_client
+import saxo_api_client.endpoints.referencedata as rd
 import json
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 ContinuousFuturesUic = "12345"
 r = rd.instruments.FuturesSpaces(ContinuousFuturesUic=ContinuousFuturesUic)
 client.request(r)
@@ -200,11 +200,11 @@ print(json.dumps(r.response, indent=2))
 #### Example
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.referencedata as rd
+import saxo_api_client
+import saxo_api_client.endpoints.referencedata as rd
 import json
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 Uic = "21"
 AssetType = "FxSpot"
 r = rd.instruments.TradingSchedule(Uic=Uic, AssetType=AssetType)

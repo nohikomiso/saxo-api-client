@@ -1,10 +1,10 @@
-# saxo_openapi ライブラリ
+# saxo_api_client ライブラリ
 
 Saxo Bank OpenAPI の Python クライアントライブラリ
 
 ## 概要
 
-`saxo_openapi` は、Saxo Bank が提供する OpenAPI を Python から利用するためのクライアントライブラリです。このライブラリは **AI-First 設計** を採用しており、コードとドキュメントを完全に分離することで、高い保守性と AI アシスタントによる効率的なナビゲーションを実現しています。
+`saxo_api_client` は、Saxo Bank が提供する OpenAPI を Python から利用するためのクライアントライブラリです。このライブラリは **AI-First 設計** を採用しており、コードとドキュメントを完全に分離することで、高い保守性と AI アシスタントによる効率的なナビゲーションを実現しています。
 
 ### 主要機能
 
@@ -19,12 +19,12 @@ Saxo Bank OpenAPI の Python クライアントライブラリ
 
 **pip を使用する場合**
 ```bash
-pip install git+https://github.com/nohikomiso/saxo-openapi.git
+pip install git+https://github.com/nohikomiso/saxo-api-client.git
 ```
 
 **uv を使用する場合**
 ```bash
-uv add git+https://github.com/nohikomiso/saxo-openapi.git
+uv add git+https://github.com/nohikomiso/saxo-api-client.git
 ```
 
 ## クイックスタート

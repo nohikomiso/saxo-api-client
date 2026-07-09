@@ -7,15 +7,15 @@ This script demonstrates how to key validate_order to check
 parameters and market conditions without placing an actual order.
 
 Usage:
-    uv run libs/saxo_openapi/samples/verify_orders_precheck.py
+    uv run libs/saxo_api_client/samples/verify_orders_precheck.py
 """
 
 import json
 
-import saxo_openapi.definitions.orders as OD
-from saxo_openapi import API
-from saxo_openapi.contrib.orders import MarketOrder, StopOrder
-from saxo_openapi.contrib.trader import SaxoTrader
+import saxo_api_client.definitions.orders as OD
+from saxo_api_client import API
+from saxo_api_client.contrib.orders import MarketOrder, StopOrder
+from saxo_api_client.contrib.trader import SaxoTrader
 
 
 def read_token(token_file="token_demo.txt"):

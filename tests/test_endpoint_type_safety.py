@@ -26,12 +26,12 @@ import inspect
 from typing import get_type_hints
 
 import pytest
-from saxo_openapi.endpoints.accounthistory import performance
-from saxo_openapi.endpoints.portfolio import balances, orders, positions
-from saxo_openapi.endpoints.referencedata import instruments
-from saxo_openapi.endpoints.rootservices import sessions
-from saxo_openapi.endpoints.trading import orders as trading_orders
-from saxo_openapi.endpoints.trading import prices
+from saxo_api_client.endpoints.accounthistory import performance
+from saxo_api_client.endpoints.portfolio import balances, orders, positions
+from saxo_api_client.endpoints.referencedata import instruments
+from saxo_api_client.endpoints.rootservices import sessions
+from saxo_api_client.endpoints.trading import orders as trading_orders
+from saxo_api_client.endpoints.trading import prices
 
 
 class TestPortfolioBalancesTypeHints:

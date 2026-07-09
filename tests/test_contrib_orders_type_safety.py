@@ -11,8 +11,8 @@ import inspect
 import json
 
 import pytest
-import saxo_openapi.definitions.orders as OD
-from saxo_openapi.contrib.orders import (
+import saxo_api_client.definitions.orders as OD
+from saxo_api_client.contrib.orders import (
     LimitOrder,
     LimitOrderFxSpot,
     LimitOrderStock,
@@ -27,20 +27,20 @@ from saxo_openapi.contrib.orders import (
     StopOrder,
     StopOrderFxSpot,
 )
-from saxo_openapi.contrib.orders.baseorder import BaseOrder
-from saxo_openapi.contrib.orders.helper import (
+from saxo_api_client.contrib.orders.baseorder import BaseOrder
+from saxo_api_client.contrib.orders.helper import (
     direction_from_amount,
     direction_invert,
     order_duration_spec,
     tie_account_to_order,
 )
-from saxo_openapi.contrib.orders.mixin import OnFillHnd
-from saxo_openapi.contrib.orders.onfill import (
+from saxo_api_client.contrib.orders.mixin import OnFillHnd
+from saxo_api_client.contrib.orders.onfill import (
     OnFill,
     StopLossDetails,
     TakeProfitDetails,
 )
-from saxo_openapi.types.primitives import AssetType, Uic
+from saxo_api_client.types.primitives import AssetType, Uic
 
 
 class TestTypeHints:

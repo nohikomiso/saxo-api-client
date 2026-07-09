@@ -30,11 +30,11 @@
 #### 実行例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.{category} as {category}
+import saxo_api_client
+import saxo_api_client.endpoints.{category} as {category}
 import json
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 r = {category}.{subcategory}.{EndpointClassName}(...)
 client.request(r)
 print(json.dumps(r.response, indent=2))

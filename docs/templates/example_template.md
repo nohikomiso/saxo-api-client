@@ -15,9 +15,9 @@
 ## コード例
 
 ```python
-from saxo_openapi import API
-import saxo_openapi.endpoints.portfolio as portfolio
-import saxo_openapi.endpoints.trading as trading
+from saxo_api_client import API
+import saxo_api_client.endpoints.portfolio as portfolio
+import saxo_api_client.endpoints.trading as trading
 import json
 
 def {workflow_function}(client):

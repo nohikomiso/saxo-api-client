@@ -131,8 +131,8 @@ ReferenceData カテゴリは、銘柄情報、通貨、取引所、標準日付
 ### 銘柄検索の例
 
 ```python
-import saxo_openapi.endpoints.referencedata as ref
-from saxo_openapi import API
+import saxo_api_client.endpoints.referencedata as ref
+from saxo_api_client import API
 
 client = API(access_token="YOUR_TOKEN")
 

@@ -1,4 +1,4 @@
-# Saxo-OpenAPI (AI-Ready)
+# saxo-api-client (AI-Ready)
 
 English | [日本語](./README.ja.md)
 
@@ -46,12 +46,12 @@ Please refer to the guides inside the `docs/` directory for detailed information
 
 **Using pip**
 ```bash
-pip install git+https://github.com/nohikomiso/saxo-openapi.git
+pip install git+https://github.com/nohikomiso/saxo-api-client.git
 ```
 
 **Using uv**
 ```bash
-uv add git+https://github.com/nohikomiso/saxo-openapi.git
+uv add git+https://github.com/nohikomiso/saxo-api-client.git
 ```
 
 ### Your First Request
@@ -62,9 +62,9 @@ The `SaxoClient` is the unified facade class that provides an intuitive, one-lin
 
 ```python
 import json
-from saxo_openapi.contrib.client import SaxoClient
-from saxo_openapi.auth import SaxoAuthClient
-from saxo_openapi import AssetType, OrderType
+from saxo_api_client.contrib.client import SaxoClient
+from saxo_api_client.auth import SaxoAuthClient
+from saxo_api_client import AssetType, OrderType
 
 # Optional: Define a callback to securely save the token when it refreshes
 def save_token(token_data):
@@ -156,11 +156,11 @@ The streaming features in this library (Saxo-OpenAPI) are currently under active
 
 ## 📂 Directory Structure
 
-- `saxo_openapi/`: Core library source code. Compact docstrings optimized for AI tools.
+- `saxo_api_client/`: Core library source code. Compact docstrings optimized for AI tools.
 - `docs/api/`: **[Main]** Japanese documentation for all endpoints.
 - `docs/schemas/`: Over 270 JSON Schemas representing requests and responses.
 - `docs/examples/`: Practical workflow examples (balance check, order execution, streaming, etc.).
-- `saxo_openapi/contrib/`: Helper classes to simplify order construction (`SaxoTrader`, etc.).
+- `saxo_api_client/contrib/`: Helper classes to simplify order construction (`SaxoTrader`, etc.).
 - `samples/`: **[New]** Example scripts to verify operations in real/SIM environments (FX, options, order lifecycles).
 - `tests/`: Unit and integration tests for the library.
 - `.ai/`: Structured index and metrics metadata for AI assistants.

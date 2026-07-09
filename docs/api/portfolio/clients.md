@@ -22,11 +22,11 @@
 #### 実行例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 import json
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 r = pf.clients.ClientDetailsMe()
 client.request(r)
 print(json.dumps(r.response, indent=2))
@@ -54,11 +54,11 @@ print(json.dumps(r.response, indent=2))
 #### 実行例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 import json
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 ClientKey = "..."
 r = pf.clients.ClientDetails(ClientKey=ClientKey)
 client.request(r)
@@ -86,11 +86,11 @@ print(json.dumps(r.response, indent=2))
 #### 実行例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 import json
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 data = {
     "AccountValueProtectionLimit": 10000.0,
     "PositionNettingMode": "Netting"
@@ -124,11 +124,11 @@ print(r.status_code)
 #### 実行例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 import json
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 params = {"OwnerKey": "..."}
 r = pf.clients.ClientDetailsByOwner(params=params)
 client.request(r)
@@ -164,11 +164,11 @@ IBがクライアントに代わってポジションネッティングモード
 #### 実行例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 import json
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 params = {"ClientKey": "..."}
 data = {
     "NewPositionNettingMode": "Netting"

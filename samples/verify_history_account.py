@@ -9,7 +9,7 @@ This sample demonstrates retrieving historical data:
 3. Account Values: GET /hist/v3/accountvalues/{ClientKey}
 
 Usage:
-    uv run libs/saxo_openapi/samples/verify_history_account.py
+    uv run libs/saxo_api_client/samples/verify_history_account.py
 """
 
 import json
@@ -23,12 +23,12 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 try:
-    import saxo_openapi
-    from saxo_openapi import API
-    from saxo_openapi.endpoints.accounthistory import accountvalues, historicalpositions, performance
-    from saxo_openapi.endpoints.portfolio import accounts
+    import saxo_api_client
+    from saxo_api_client import API
+    from saxo_api_client.endpoints.accounthistory import accountvalues, historicalpositions, performance
+    from saxo_api_client.endpoints.portfolio import accounts
 except ImportError:
-    logger.error("saxo_openapi not installed.")
+    logger.error("saxo_api_client not installed.")
     sys.exit(1)
 
 

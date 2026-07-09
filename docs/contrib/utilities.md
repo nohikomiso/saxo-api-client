@@ -1,15 +1,15 @@
 # Contrib Utilities
 
-`saxo_openapi.contrib` パッケージには、API 操作を簡素化するためのユーティリティモジュールが含まれています。
+`saxo_api_client.contrib` パッケージには、API 操作を簡素化するためのユーティリティモジュールが含まれています。
 
 ## セッションユーティリティ
 
-`saxo_openapi.contrib.session` モジュールは、アカウント情報を簡単に取得するためのヘルパー関数を提供します。
+`saxo_api_client.contrib.session` モジュールは、アカウント情報を簡単に取得するためのヘルパー関数を提供します。
 
 ### インポート
 
 ```python
-from saxo_openapi.contrib import session
+from saxo_api_client.contrib import session
 ```
 
 ### account_info
@@ -39,12 +39,12 @@ ai = session.account_info2(client)
 
 ## 一般ユーティリティ
 
-`saxo_openapi.contrib.util` モジュールは、一般的なタスクのためのユーティリティ関数を提供します。
+`saxo_api_client.contrib.util` モジュールは、一般的なタスクのためのユーティリティ関数を提供します。
 
 ### インポート
 
 ```python
-from saxo_openapi.contrib.util import InstrumentToUic
+from saxo_api_client.contrib.util import InstrumentToUic
 ```
 
 ### InstrumentToUic

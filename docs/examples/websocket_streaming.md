@@ -9,7 +9,7 @@
     ```bash
     uv pip install websocket-client
     ```
-*   `saxo_openapi` ライブラリ
+*   `saxo_api_client` ライブラリ
 
 ## コード例
 
@@ -18,10 +18,10 @@ import json
 import threading
 import time
 import websocket
-from saxo_openapi import API
-import saxo_openapi.endpoints.rootservices as rs
-import saxo_openapi.endpoints.trading as tr
-from saxo_openapi.contrib.ws.stream import decode_ws_msg
+from saxo_api_client import API
+import saxo_api_client.endpoints.rootservices as rs
+import saxo_api_client.endpoints.trading as tr
+from saxo_api_client.contrib.ws.stream import decode_ws_msg
 
 # 設定
 # ⚠️ セキュリティ注意: トークンは環境変数から読み込むことを推奨
@@ -71,7 +71,7 @@ def create_subscription():
     
     # InfoPrices サブスクリプションエンドポイント
     # 注意: 以下は概念的な例です。実際のエンドポイントクラスを使用してください。
-    # 例: saxo_openapi.endpoints.trading.infoprices.InfoPriceSubscription
+    # 例: saxo_api_client.endpoints.trading.infoprices.InfoPriceSubscription
     
     # r = tr.infoprices.InfoPriceSubscription(data=data)
     # 実際のエンドポイントが存在しない場合は、適切なエンドポイントを確認してください。
@@ -103,7 +103,7 @@ ws.run_forever()
 
 1.  **ContextId と ReferenceId**: ストリーミングセッションを識別するための `ContextId` と、個々のデータストリーム（サブスクリプション）を識別するための `ReferenceId` を定義します。
 2.  **WebSocket 接続**: `websocket-client` を使用して Saxo Bank のストリーミングサーバーに接続します。URL には `ContextId` と認証トークンを含めます。
-3.  **メッセージデコード**: `on_message` コールバック内で、`saxo_openapi.contrib.ws.stream.decode_ws_msg` を使用してバイナリメッセージをデコードします。
+3.  **メッセージデコード**: `on_message` コールバック内で、`saxo_api_client.contrib.ws.stream.decode_ws_msg` を使用してバイナリメッセージをデコードします。
 4.  **サブスクリプション作成**: WebSocket 接続とは別に、REST API を使用してデータの購読（サブスクリプション）を開始します。このリクエストボディには、WebSocket 接続と同じ `ContextId` と、このデータストリーム用の `ReferenceId` を指定します。
 5.  **データ受信**: サブスクリプションが成功すると、サーバーは WebSocket 経由で指定された `ReferenceId` タグ付きのデータを送信し始めます。
 

@@ -22,11 +22,11 @@
 #### Example
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 import json
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 r = pf.balances.AccountBalancesMe()
 client.request(r)
 print(json.dumps(r.response, indent=2))
@@ -54,11 +54,11 @@ print(json.dumps(r.response, indent=2))
 #### Example
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 import json
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 params = {
     "ClientKey": "ClientKey_Here",
     "AccountGroupKey": "AccountGroupKey_Here"
@@ -90,11 +90,11 @@ print(json.dumps(r.response, indent=2))
 #### Example
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 import json
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 params = {
     "ClientKey": "ClientKey_Here"
 }
@@ -125,11 +125,11 @@ print(json.dumps(r.response, indent=2))
 #### Example
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 import json
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 data = {
     "Arguments": {
         "ClientKey": "ClientKey_Here"
@@ -167,10 +167,10 @@ print(json.dumps(r.response, indent=2))
 #### Example
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 ContextId = "explorer_12345"
 params = {"Tag": "MyTag"}
 r = pf.balances.BalanceSubscriptionRemoveByTag(ContextId=ContextId, params=params)
@@ -201,10 +201,10 @@ assert r.status_code == r.expected_status
 #### Example
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 ContextId = "explorer_12345"
 ReferenceId = "MyBalanceSub"
 r = pf.balances.BalanceSubscriptionRemoveById(ContextId=ContextId, ReferenceId=ReferenceId)

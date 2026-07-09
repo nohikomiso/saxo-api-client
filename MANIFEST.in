@@ -1,2 +1,2 @@
 include LICENSE
-recursive-include saxo_openapi *.py
+recursive-include saxo_api_client *.py

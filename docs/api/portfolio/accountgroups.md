@@ -29,11 +29,11 @@
 #### 実行例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 import json
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 params = {}  # 必要なパラメータを設定
 AccountGroupKey = "..."
 r = pf.accountgroups.AccountGroupDetails(AccountGroupKey=AccountGroupKey, params=params)
@@ -65,11 +65,11 @@ print(json.dumps(r.response, indent=2))
 #### 実行例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 import json
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 params = {}
 r = pf.accountgroups.AccountGroupsMe(params=params)
 client.request(r)
@@ -100,11 +100,11 @@ print(json.dumps(r.response, indent=2))
 #### 実行例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 import json
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 params = {"ClientKey": "..."}
 r = pf.accountgroups.AccountGroupsList(params=params)
 client.request(r)
@@ -141,11 +141,11 @@ print(json.dumps(r.response, indent=2))
 #### 実行例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.portfolio as pf
+import saxo_api_client
+import saxo_api_client.endpoints.portfolio as pf
 import json
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 AccountGroupKey = "..."
 params = {}
 data = {}

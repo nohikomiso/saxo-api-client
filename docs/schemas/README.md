@@ -92,7 +92,7 @@ python scripts/validate_schemas.py
 
 ## 自動生成
 
-これらのスキーマファイルは `scripts/convert_responses_to_json.py` によって自動生成されました。手動での編集は推奨されません。変更が必要な場合は、元の `saxo_openapi/endpoints/*/responses/*.py` ファイルを更新し、スクリプトを再実行してください。
+これらのスキーマファイルは `scripts/convert_responses_to_json.py` によって自動生成されました。手動での編集は推奨されません。変更が必要な場合は、元の `saxo_api_client/endpoints/*/responses/*.py` ファイルを更新し、スクリプトを再実行してください。
 
 ## 関連ドキュメント
 

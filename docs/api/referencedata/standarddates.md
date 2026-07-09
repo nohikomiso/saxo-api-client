@@ -23,10 +23,10 @@
 
 ```python
 import json
-import saxo_openapi
-import saxo_openapi.endpoints.referencedata as rd
+import saxo_api_client
+import saxo_api_client.endpoints.referencedata as rd
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 
 # フォワードテナー日を取得
 Uic = 22
@@ -73,10 +73,10 @@ print(json.dumps(r.response, indent=2))
 
 ```python
 import json
-import saxo_openapi
-import saxo_openapi.endpoints.referencedata as rd
+import saxo_api_client
+import saxo_api_client.endpoints.referencedata as rd
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 
 # FXオプション満期日を取得
 Uic = 22

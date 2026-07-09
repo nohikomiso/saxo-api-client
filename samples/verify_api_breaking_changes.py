@@ -10,7 +10,7 @@ Verify specific breaking changes and new endpoint versions:
 4. Verify New Endpoint GET hist/v4/performance
 
 Usage:
-    uv run libs/saxo_openapi/samples/verify_api_breaking_changes.py
+    uv run libs/saxo_api_client/samples/verify_api_breaking_changes.py
 """
 
 import json
@@ -24,16 +24,16 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 try:
-    import saxo_openapi
-    from saxo_openapi import API
-    from saxo_openapi.endpoints.accounthistory import performance
+    import saxo_api_client
+    from saxo_api_client import API
+    from saxo_api_client.endpoints.accounthistory import performance
 
     # We might need raw requests or specific endpoint classes to test old paths if classes were removed.
     # For removed classes, we can manually construct requests using library internals if possible
     # or just skip if code doesn't allow.
     # Check new classes.
-    from saxo_openapi.endpoints.portfolio import positions
-    from saxo_openapi.endpoints.rootservices import sessions
+    from saxo_api_client.endpoints.portfolio import positions
+    from saxo_api_client.endpoints.rootservices import sessions
 except ImportError:
     sys.exit(1)
 
@@ -59,7 +59,7 @@ def main():
     try:
         # Assuming defaults to latest
         # We need client key
-        from saxo_openapi.endpoints.portfolio import accounts
+        from saxo_api_client.endpoints.portfolio import accounts
 
         r_acc = accounts.AccountsMe()
         client.request(r_acc)

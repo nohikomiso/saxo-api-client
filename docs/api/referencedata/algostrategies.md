@@ -20,10 +20,10 @@
 
 ```python
 import json
-import saxo_openapi
-import saxo_openapi.endpoints.referencedata as rd
+import saxo_api_client
+import saxo_api_client.endpoints.referencedata as rd
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 
 # ページネーションパラメータを指定
 params = {
@@ -81,10 +81,10 @@ print(json.dumps(r.response, indent=2))
 
 ```python
 import json
-import saxo_openapi
-import saxo_openapi.endpoints.referencedata as rd
+import saxo_api_client
+import saxo_api_client.endpoints.referencedata as rd
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 
 # 特定のアルゴリズム戦略の詳細を取得
 Name = "Implementation Shortfall"

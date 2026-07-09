@@ -17,8 +17,8 @@
 ### 初期化
 
 ```python
-from saxo_openapi import API
-from saxo_openapi.contrib.option_finder import OptionFinder
+from saxo_api_client import API
+from saxo_api_client.contrib.option_finder import OptionFinder
 
 client = API(access_token="YOUR_TOKEN", environment="simulation")
 finder = OptionFinder(client)
@@ -74,8 +74,8 @@ option = finder.find_option(
 ### 初期化
 
 ```python
-from saxo_openapi import API
-from saxo_openapi.contrib.option_trader import OptionTrader
+from saxo_api_client import API
+from saxo_api_client.contrib.option_trader import OptionTrader
 
 client = API(access_token="YOUR_TOKEN", environment="simulation")
 trader = OptionTrader(client)
@@ -169,7 +169,7 @@ print(result)  # {"PreCheckResult": "Ok", ...}
 APIが提供するデフォルト構成を使用します。
 
 ```python
-from saxo_openapi.contrib.option_types import OptionsStrategyType
+from saxo_api_client.contrib.option_types import OptionsStrategyType
 
 # Straddle戦略のデフォルト構成を取得
 defaults = trader.get_strategy_defaults(
@@ -231,7 +231,7 @@ print(result) # {"PreCheckResult": "Ok", ...}
 
 ## データクラス
 
-`saxo_openapi.contrib.option_types` で定義されています。
+`saxo_api_client.contrib.option_types` で定義されています。
 
 | クラス | 説明 |
 |-------|------|

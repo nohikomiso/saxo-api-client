@@ -1,6 +1,6 @@
 # SaxoTrader Helper
 
-`saxo_openapi.contrib.trader.SaxoTrader` は、注文発注プロセスを大幅に簡素化する高レベルヘルパークラスです。
+`saxo_api_client.contrib.trader.SaxoTrader` は、注文発注プロセスを大幅に簡素化する高レベルヘルパークラスです。
 アカウント情報の管理と注文リクエストの作成・実行を1つのクラスにカプセル化しています。
 
 ## 初期化
@@ -8,8 +8,8 @@
 `API` クライアントインスタンスを渡して初期化します。`AccountKey` は初回利用時に自動的に取得されます。
 
 ```python
-from saxo_openapi import API
-from saxo_openapi.contrib.trader import SaxoTrader
+from saxo_api_client import API
+from saxo_api_client.contrib.trader import SaxoTrader
 
 token = "YOUR_ACCESS_TOKEN"
 client = API(access_token=token)

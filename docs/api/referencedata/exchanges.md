@@ -20,10 +20,10 @@
 
 ```python
 import json
-import saxo_openapi
-import saxo_openapi.endpoints.referencedata as rd
+import saxo_api_client
+import saxo_api_client.endpoints.referencedata as rd
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 
 # 取引所一覧を取得
 r = rd.exchanges.ExchangeList()
@@ -68,10 +68,10 @@ print(json.dumps(r.response, indent=2))
 
 ```python
 import json
-import saxo_openapi
-import saxo_openapi.endpoints.referencedata as rd
+import saxo_api_client
+import saxo_api_client.endpoints.referencedata as rd
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 
 # 特定の取引所の詳細を取得
 ExchangeId = "XNYS"

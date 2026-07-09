@@ -19,8 +19,8 @@ Portfolio Orders エンドポイントは、ポートフォリオ内のオープ
 ### 特定のオープンオーダー取得 (GetOpenOrder)
 
 ```python
-from saxo_openapi import API
-from saxo_openapi.endpoints.portfolio import orders
+from saxo_api_client import API
+from saxo_api_client.endpoints.portfolio import orders
 import json
 
 client = API(access_token="YOUR_ACCESS_TOKEN")
@@ -46,8 +46,8 @@ print(json.dumps(r.response, indent=4))
 ### 自分のオープンオーダー一覧取得 (GetOpenOrdersMe)
 
 ```python
-from saxo_openapi import API
-from saxo_openapi.endpoints.portfolio import orders
+from saxo_api_client import API
+from saxo_api_client.endpoints.portfolio import orders
 import json
 
 client = API(access_token="YOUR_ACCESS_TOKEN")
@@ -67,8 +67,8 @@ print(json.dumps(r.response, indent=4))
 ### オープンオーダー詳細取得 (OrderDetails)
 
 ```python
-from saxo_openapi import API
-from saxo_openapi.endpoints.portfolio import orders
+from saxo_api_client import API
+from saxo_api_client.endpoints.portfolio import orders
 import json
 
 client = API(access_token="YOUR_ACCESS_TOKEN")
@@ -92,8 +92,8 @@ print(json.dumps(r.response, indent=4))
 ### 全てのオープンオーダー取得 (GetAllOpenOrders)
 
 ```python
-from saxo_openapi import API
-from saxo_openapi.endpoints.portfolio import orders
+from saxo_api_client import API
+from saxo_api_client.endpoints.portfolio import orders
 import json
 
 client = API(access_token="YOUR_ACCESS_TOKEN")
@@ -114,8 +114,8 @@ print(json.dumps(r.response, indent=4))
 ### オープンオーダー・サブスクリプション作成 (CreateOpenOrdersSubscription)
 
 ```python
-from saxo_openapi import API
-from saxo_openapi.endpoints.portfolio import orders
+from saxo_api_client import API
+from saxo_api_client.endpoints.portfolio import orders
 import json
 
 client = API(access_token="YOUR_ACCESS_TOKEN")
@@ -140,8 +140,8 @@ print(json.dumps(r.response, indent=4))
 ### タグによるサブスクリプション削除 (RemoveOpenOrderSubscriptionsByTag)
 
 ```python
-from saxo_openapi import API
-from saxo_openapi.endpoints.portfolio import orders
+from saxo_api_client import API
+from saxo_api_client.endpoints.portfolio import orders
 
 client = API(access_token="YOUR_ACCESS_TOKEN")
 
@@ -162,8 +162,8 @@ assert r.status_code == r.expected_status
 ### IDによるサブスクリプション削除 (RemoveOpenOrderSubscription)
 
 ```python
-from saxo_openapi import API
-from saxo_openapi.endpoints.portfolio import orders
+from saxo_api_client import API
+from saxo_api_client.endpoints.portfolio import orders
 
 client = API(access_token="YOUR_ACCESS_TOKEN")
 

@@ -1,6 +1,6 @@
 # Contrib Orders
 
-`saxo_openapi.contrib.orders` モジュールは、注文リクエストの作成を簡素化するためのヘルパークラスと関数を提供します。
+`saxo_api_client.contrib.orders` モジュールは、注文リクエストの作成を簡素化するためのヘルパークラスと関数を提供します。
 これらのクラスを使用することで、複雑な辞書構造を手動で構築する代わりに、オブジェクト指向のアプローチで注文パラメータを指定できます。
 
 ## 概要
@@ -15,7 +15,7 @@
 ## インポート
 
 ```python
-from saxo_openapi.contrib.orders import (
+from saxo_api_client.contrib.orders import (
     MarketOrder,
     LimitOrder,
     StopOrder,
@@ -24,7 +24,7 @@ from saxo_openapi.contrib.orders import (
     TakeProfitDetails,
     StopLossDetails
 )
-import saxo_openapi.definitions.orders as OD
+import saxo_api_client.definitions.orders as OD
 ```
 
 ## 注文クラス
@@ -187,9 +187,9 @@ order_with_account = tie_account_to_order(
 
 ```python
 import json
-from saxo_openapi import API
-import saxo_openapi.endpoints.trading as tr
-from saxo_openapi.contrib.orders import (
+from saxo_api_client import API
+import saxo_api_client.endpoints.trading as tr
+from saxo_api_client.contrib.orders import (
     tie_account_to_order,
     MarketOrderFxSpot,
     TakeProfitDetails,

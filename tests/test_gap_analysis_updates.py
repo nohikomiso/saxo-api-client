@@ -1,8 +1,8 @@
 """Test cases for gap analysis updates based on official Saxo Bank OpenAPI documentation."""
 
-from saxo_openapi.endpoints.accounthistory import accountvalues
-from saxo_openapi.endpoints.portfolio import netpositions, users
-from saxo_openapi.endpoints.rootservices import sessions
+from saxo_api_client.endpoints.accounthistory import accountvalues
+from saxo_api_client.endpoints.portfolio import netpositions, users
+from saxo_api_client.endpoints.rootservices import sessions
 
 
 class TestAccountHistoryUpdates:
@@ -13,7 +13,7 @@ class TestAccountHistoryUpdates:
         # According to gap analysis: hist/v3/perf -> hist/v4/performance
         # The old v3 path should still exist but might be deprecated
         # New v4 path should be available as well
-        from saxo_openapi.endpoints.accounthistory import performance_v4
+        from saxo_api_client.endpoints.accounthistory import performance_v4
 
         # Test that v4 endpoint exists
         assert hasattr(performance_v4, "AccountPerformanceV4")
@@ -74,7 +74,7 @@ class TestTradeUpdates:
         # - POST trade/v2/orders/multileg
         # - POST trade/v2/orders/multileg/precheck
         # - GET trade/v2/orders/multileg/defaults
-        from saxo_openapi.endpoints.trading import multilegorders
+        from saxo_api_client.endpoints.trading import multilegorders
 
         assert hasattr(multilegorders, "MultilegOrder")
         assert hasattr(multilegorders, "MultilegOrderPrecheck")
@@ -98,7 +98,7 @@ class TestTradeUpdates:
         # According to gap analysis:
         # - POST trade/v1/prices/multileg
         # - POST trade/v1/prices/multileg/subscriptions
-        from saxo_openapi.endpoints.trading import multilegprices
+        from saxo_api_client.endpoints.trading import multilegprices
 
         assert hasattr(multilegprices, "MultilegPrice")
         assert hasattr(multilegprices, "MultilegPriceSubscription")
@@ -119,7 +119,7 @@ class TestTradeUpdates:
         # - PUT trade/v1/prices/subscriptions/{ContextId}/{ReferenceId}/MarginImpact
         # - POST trade/v2/trades
 
-        from saxo_openapi.endpoints.trading import (
+        from saxo_api_client.endpoints.trading import (
             allocationkeys,
             infoprices,
             prices_extensions,
@@ -154,7 +154,7 @@ class TestMarketDataDocumentsUpdates:
 
     def test_instrument_documents_paths(self):
         """Test that market data document endpoints exist and have correct paths."""
-        from saxo_openapi.endpoints.marketdata import documents
+        from saxo_api_client.endpoints.marketdata import documents
 
         # Test InstrumentPdfDocument endpoint
         assert hasattr(documents, "InstrumentPdfDocument"), "Missing InstrumentPdfDocument endpoint"

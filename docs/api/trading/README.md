@@ -113,7 +113,7 @@ Trading カテゴリは、注文の発注・変更・キャンセル、価格情
 注文作成を簡素化するヘルパークラスが用意されています:
 
 ```python
-from saxo_openapi.contrib.orders import (
+from saxo_api_client.contrib.orders import (
     MarketOrder,
     LimitOrder,
     StopOrder,

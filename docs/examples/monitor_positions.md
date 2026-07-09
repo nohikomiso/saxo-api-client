@@ -5,14 +5,14 @@
 ## 前提条件
 
 *   有効なアクセストークン
-*   `saxo_openapi` ライブラリがインストールされていること
+*   `saxo_api_client` ライブラリがインストールされていること
 
 ## コード例
 
 ```python
 import json
-from saxo_openapi import API
-import saxo_openapi.endpoints.portfolio as pf
+from saxo_api_client import API
+import saxo_api_client.endpoints.portfolio as pf
 
 # 1. クライアントの初期化
 # ⚠️ セキュリティ注意: トークンは環境変数から読み込むことを推奨
@@ -64,7 +64,7 @@ except Exception as e:
 
 ## 解説
 
-1.  `saxo_openapi.endpoints.portfolio.netpositions.NetPositionsMe` を使用して、現在のネットポジション一覧を取得します。
+1.  `saxo_api_client.endpoints.portfolio.netpositions.NetPositionsMe` を使用して、現在のネットポジション一覧を取得します。
 2.  レスポンスの `Data` リストをループし、各ポジションの詳細情報（銘柄名、数量、建玉価格、現在価格、損益など）を表示します。
 3.  必要に応じて、取得したデータから特定の銘柄のポジションをフィルタリングします。
 

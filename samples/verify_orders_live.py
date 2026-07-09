@@ -9,15 +9,15 @@ This script demonstrates valid order placement using SaxoTrader:
 - Stop Limit Orders
 
 Usage:
-    uv run libs/saxo_openapi/samples/verify_orders_live.py
+    uv run libs/saxo_api_client/samples/verify_orders_live.py
 """
 
 import time
 
-import saxo_openapi.definitions.orders as OD
-import saxo_openapi.endpoints.trading as tr
-from saxo_openapi import API
-from saxo_openapi.contrib.trader import SaxoTrader
+import saxo_api_client.definitions.orders as OD
+import saxo_api_client.endpoints.trading as tr
+from saxo_api_client import API
+from saxo_api_client.contrib.trader import SaxoTrader
 
 
 def read_token(token_file="token_demo.txt"):

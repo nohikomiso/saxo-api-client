@@ -10,7 +10,7 @@ Test comprehensive reference data:
 - TimeZones
 
 Usage:
-    uv run libs/saxo_openapi/samples/verify_refdata_details.py
+    uv run libs/saxo_api_client/samples/verify_refdata_details.py
 """
 
 import json
@@ -24,9 +24,9 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 try:
-    import saxo_openapi
-    from saxo_openapi import API
-    from saxo_openapi.endpoints.referencedata import exchanges, instruments, languages, timezones
+    import saxo_api_client
+    from saxo_api_client import API
+    from saxo_api_client.endpoints.referencedata import exchanges, instruments, languages, timezones
 except ImportError:
     logger.error("Imports failed.")
     sys.exit(1)

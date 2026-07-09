@@ -22,11 +22,11 @@ Diagnosticsエンドポイントは、Saxo Bank OpenAPIの接続性をテスト�
 ### 基本的な接続テスト
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.rootservices as rs
+import saxo_api_client
+import saxo_api_client.endpoints.rootservices as rs
 
 # APIクライアントの初期化
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 
 # GETリクエストのテスト
 request = rs.diagnostics.Get()
@@ -38,10 +38,10 @@ print("GET test passed!")
 ### Echoエンドポイントでリクエストの確認
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.rootservices as rs
+import saxo_api_client
+import saxo_api_client.endpoints.rootservices as rs
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 
 # リクエスト情報を取得
 request = rs.diagnostics.Echo()
@@ -65,10 +65,10 @@ print(f"Request details: {response}")
 **使用例**:
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.rootservices as rs
+import saxo_api_client
+import saxo_api_client.endpoints.rootservices as rs
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 r = rs.diagnostics.Get()
 rv = client.request(r)
 assert r.status_code == r.expected_status
@@ -90,10 +90,10 @@ assert r.status_code == r.expected_status
 **使用例**:
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.rootservices as rs
+import saxo_api_client
+import saxo_api_client.endpoints.rootservices as rs
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 r = rs.diagnostics.Post()
 rv = client.request(r)
 assert r.status_code == r.expected_status
@@ -115,10 +115,10 @@ assert r.status_code == r.expected_status
 **使用例**:
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.rootservices as rs
+import saxo_api_client
+import saxo_api_client.endpoints.rootservices as rs
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 r = rs.diagnostics.Put()
 rv = client.request(r)
 assert r.status_code == r.expected_status
@@ -140,10 +140,10 @@ assert r.status_code == r.expected_status
 **使用例**:
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.rootservices as rs
+import saxo_api_client
+import saxo_api_client.endpoints.rootservices as rs
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 r = rs.diagnostics.Delete()
 rv = client.request(r)
 assert r.status_code == r.expected_status
@@ -165,10 +165,10 @@ assert r.status_code == r.expected_status
 **使用例**:
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.rootservices as rs
+import saxo_api_client
+import saxo_api_client.endpoints.rootservices as rs
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 r = rs.diagnostics.Patch()
 rv = client.request(r)
 assert r.status_code == r.expected_status
@@ -190,10 +190,10 @@ assert r.status_code == r.expected_status
 **使用例**:
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.rootservices as rs
+import saxo_api_client
+import saxo_api_client.endpoints.rootservices as rs
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 r = rs.diagnostics.Head()
 rv = client.request(r)
 assert r.status_code == r.expected_status
@@ -215,10 +215,10 @@ assert r.status_code == r.expected_status
 **使用例**:
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.rootservices as rs
+import saxo_api_client
+import saxo_api_client.endpoints.rootservices as rs
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 r = rs.diagnostics.Options()
 rv = client.request(r)
 assert r.status_code == r.expected_status
@@ -240,10 +240,10 @@ assert r.status_code == r.expected_status
 **使用例**:
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.rootservices as rs
+import saxo_api_client
+import saxo_api_client.endpoints.rootservices as rs
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 r = rs.diagnostics.Echo()
 rv = client.request(r)
 print(f"Echo response: {rv}")

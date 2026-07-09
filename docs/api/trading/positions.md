@@ -31,12 +31,12 @@ Trading Positions（取引ポジション）は、ポジションの作成・更
 ### コード例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.trading as tr
+import saxo_api_client
+import saxo_api_client.endpoints.trading as tr
 import json
 
 # クライアント初期化
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 
 # クォートでポジションを作成
 data = {
@@ -65,12 +65,12 @@ print(json.dumps(rv, indent=2))
 ### コード例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.trading as tr
+import saxo_api_client
+import saxo_api_client.endpoints.trading as tr
 import json
 
 # クライアント初期化
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 
 # ポジションを更新
 PositionId = "1019942425"
@@ -99,12 +99,12 @@ print(json.dumps(rv, indent=2))
 ### コード例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.trading as tr
+import saxo_api_client
+import saxo_api_client.endpoints.trading as tr
 import json
 
 # クライアント初期化
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 
 # ポジションを行使
 PositionId = "1019942425"
@@ -135,12 +135,12 @@ print(json.dumps(rv, indent=2))
 ### コード例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.trading as tr
+import saxo_api_client
+import saxo_api_client.endpoints.trading as tr
 import json
 
 # クライアント初期化
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 
 # UIC横断で行使
 data = {

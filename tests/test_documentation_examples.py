@@ -86,16 +86,16 @@ def test_code_blocks_have_imports():
         code_blocks = extract_python_code_blocks(md_file)
 
         for block_num, code in code_blocks:
-            # 実際にsaxo_openapiを使用している場合のみチェック
+            # 実際にsaxo_api_clientを使用している場合のみチェック
             # コメントのみや設定例はスキップ
             code_stripped = code.strip()
             if not code_stripped or code_stripped.startswith("#"):
                 continue
 
-            # saxo_openapi の使用を検出
+            # saxo_api_client の使用を検出
             if any(keyword in code for keyword in ["Client", "endpoints", "saxo"]):
-                if "saxo_openapi" not in code:
-                    pytest.fail(f"{md_file.name}: Code block {block_num} uses saxo_openapi but does not import it")
+                if "saxo_api_client" not in code:
+                    pytest.fail(f"{md_file.name}: Code block {block_num} uses saxo_api_client but does not import it")
 
 
 if __name__ == "__main__":

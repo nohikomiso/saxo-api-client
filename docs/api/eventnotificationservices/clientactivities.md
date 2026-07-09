@@ -23,12 +23,12 @@
 ### コード例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.eventnotificationservices as ens
+import saxo_api_client
+import saxo_api_client.endpoints.eventnotificationservices as ens
 import json
 
 # clientのインスタンス化
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 
 # リクエストボディのデータ
 data = {
@@ -81,11 +81,11 @@ print(json.dumps(rv, indent=2))
 ### コード例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.eventnotificationservices as ens
+import saxo_api_client
+import saxo_api_client.endpoints.eventnotificationservices as ens
 
 # clientのインスタンス化
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 
 # 削除するContextIdとReferenceIdを指定
 ContextId = "my_client_events_context"
@@ -125,11 +125,11 @@ assert r.status_code == r.expected_status
 ### コード例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.eventnotificationservices as ens
+import saxo_api_client
+import saxo_api_client.endpoints.eventnotificationservices as ens
 
 # clientのインスタンス化
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 
 # 削除するContextIdを指定
 ContextId = "my_client_events_context"
@@ -171,13 +171,13 @@ assert r.status_code == r.expected_status
 ### コード例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.eventnotificationservices as ens
+import saxo_api_client
+import saxo_api_client.endpoints.eventnotificationservices as ens
 import json
 from datetime import datetime, timedelta
 
 # clientのインスタンス化
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 
 # リクエストパラメータ
 params = {

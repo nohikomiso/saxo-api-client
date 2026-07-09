@@ -10,8 +10,8 @@
 
 ```python
 import json
-from saxo_openapi import API
-import saxo_openapi.endpoints.referencedata as rd
+from saxo_api_client import API
+import saxo_api_client.endpoints.referencedata as rd
 
 # 1. クライアントの初期化
 token = "YOUR_ACCESS_TOKEN"
@@ -48,7 +48,7 @@ except Exception as e:
 
 ## 解説
 
-1.  `saxo_openapi.endpoints.referencedata.instruments.Instruments` クラスを使用します。
+1.  `saxo_api_client.endpoints.referencedata.instruments.Instruments` クラスを使用します。
 2.  `params` 辞書で検索条件を指定します。
     *   `Keywords`: 検索したいキーワード（社名、シンボルなど）
     *   `AssetTypes`: 資産クラス（Stock, FxSpot, Bond など）。カンマ区切りで複数指定可能。

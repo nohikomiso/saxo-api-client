@@ -20,8 +20,8 @@ Closed Positions エンドポイントは、クローズされたポジション
 ### クローズ済みポジション一覧の取得 (ClosedPositionList)
 
 ```python
-from saxo_openapi import API
-from saxo_openapi.endpoints.portfolio import closedpositions
+from saxo_api_client import API
+from saxo_api_client.endpoints.portfolio import closedpositions
 import json
 
 client = API(access_token="YOUR_ACCESS_TOKEN")
@@ -42,8 +42,8 @@ print(json.dumps(r.response, indent=4))
 ### IDによるクローズ済みポジションの取得 (ClosedPositionById)
 
 ```python
-from saxo_openapi import API
-from saxo_openapi.endpoints.portfolio import closedpositions
+from saxo_api_client import API
+from saxo_api_client.endpoints.portfolio import closedpositions
 import json
 
 client = API(access_token="YOUR_ACCESS_TOKEN")
@@ -67,8 +67,8 @@ print(json.dumps(r.response, indent=4))
 ### クローズ済みポジション詳細の取得 (ClosedPositionDetails)
 
 ```python
-from saxo_openapi import API
-from saxo_openapi.endpoints.portfolio import closedpositions
+from saxo_api_client import API
+from saxo_api_client.endpoints.portfolio import closedpositions
 import json
 
 client = API(access_token="YOUR_ACCESS_TOKEN")
@@ -92,8 +92,8 @@ print(json.dumps(r.response, indent=4))
 ### 自分のクローズ済みポジション一覧の取得 (ClosedPositionsMe)
 
 ```python
-from saxo_openapi import API
-from saxo_openapi.endpoints.portfolio import closedpositions
+from saxo_api_client import API
+from saxo_api_client.endpoints.portfolio import closedpositions
 import json
 
 client = API(access_token="YOUR_ACCESS_TOKEN")
@@ -113,8 +113,8 @@ print(json.dumps(r.response, indent=4))
 ### サブスクリプションの作成 (ClosedPositionSubscription)
 
 ```python
-from saxo_openapi import API
-from saxo_openapi.endpoints.portfolio import closedpositions
+from saxo_api_client import API
+from saxo_api_client.endpoints.portfolio import closedpositions
 import json
 
 client = API(access_token="YOUR_ACCESS_TOKEN")
@@ -139,8 +139,8 @@ print(json.dumps(r.response, indent=4))
 ### サブスクリプションの更新 (ClosedPositionSubscriptionUpdate)
 
 ```python
-from saxo_openapi import API
-from saxo_openapi.endpoints.portfolio import closedpositions
+from saxo_api_client import API
+from saxo_api_client.endpoints.portfolio import closedpositions
 import json
 
 client = API(access_token="YOUR_ACCESS_TOKEN")
@@ -168,8 +168,8 @@ assert r.status_code == r.expected_status
 ### サブスクリプションの削除 (ClosedPositionSubscriptionsRemove)
 
 ```python
-from saxo_openapi import API
-from saxo_openapi.endpoints.portfolio import closedpositions
+from saxo_api_client import API
+from saxo_api_client.endpoints.portfolio import closedpositions
 
 client = API(access_token="YOUR_ACCESS_TOKEN")
 
@@ -184,8 +184,8 @@ assert r.status_code == r.expected_status
 ### IDによるサブスクリプションの削除 (ClosedPositionSubscriptionRemoveById)
 
 ```python
-from saxo_openapi import API
-from saxo_openapi.endpoints.portfolio import closedpositions
+from saxo_api_client import API
+from saxo_api_client.endpoints.portfolio import closedpositions
 
 client = API(access_token="YOUR_ACCESS_TOKEN")
 

@@ -21,12 +21,12 @@
 ### コード例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.valueadd as va
+import saxo_api_client
+import saxo_api_client.endpoints.valueadd as va
 import json
 
 # clientのインスタンス化
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 
 # リクエストパラメータ
 params = {
@@ -85,12 +85,12 @@ print(json.dumps(rv, indent=2))
 ### コード例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.valueadd as va
+import saxo_api_client
+import saxo_api_client.endpoints.valueadd as va
 import json
 
 # clientのインスタンス化
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 
 # アラート定義IDを指定
 AlertDefinitionId = 30384
@@ -147,13 +147,13 @@ print(json.dumps(rv, indent=2))
 ### コード例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.valueadd as va
+import saxo_api_client
+import saxo_api_client.endpoints.valueadd as va
 import json
 from datetime import datetime, timedelta
 
 # clientのインスタンス化
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 
 # リクエストボディのデータ
 data = {
@@ -220,13 +220,13 @@ print(json.dumps(rv, indent=2))
 ### コード例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.valueadd as va
+import saxo_api_client
+import saxo_api_client.endpoints.valueadd as va
 import json
 from datetime import datetime, timedelta
 
 # clientのインスタンス化
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 
 # 更新するアラート定義ID
 AlertDefinitionId = 30384
@@ -272,11 +272,11 @@ assert r.status_code == r.expected_status
 ### コード例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.valueadd as va
+import saxo_api_client
+import saxo_api_client.endpoints.valueadd as va
 
 # clientのインスタンス化
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 
 # 削除するアラート定義IDを指定 (複数指定可能)
 AlertDefinitionIds = '30384,30386'
@@ -312,12 +312,12 @@ assert r.status_code == r.expected_status
 ### コード例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.valueadd as va
+import saxo_api_client
+import saxo_api_client.endpoints.valueadd as va
 import json
 
 # clientのインスタンス化
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 
 # リクエストの作成と実行
 r = va.pricealerts.GetUserNotificationSettings()
@@ -364,12 +364,12 @@ print(json.dumps(rv, indent=2))
 ### コード例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.valueadd as va
+import saxo_api_client
+import saxo_api_client.endpoints.valueadd as va
 import json
 
 # clientのインスタンス化
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 
 # リクエストボディのデータ
 data = {

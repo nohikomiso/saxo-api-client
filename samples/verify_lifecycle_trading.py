@@ -14,7 +14,7 @@ Endpoinsts:
     - DELETE /trade/v1/orders/{OrderId}
 
 Usage:
-    uv run libs/saxo_openapi/samples/verify_lifecycle_trading.py
+    uv run libs/saxo_api_client/samples/verify_lifecycle_trading.py
 """
 
 import json
@@ -30,20 +30,20 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 try:
-    import saxo_openapi
-    from saxo_openapi import API
-    from saxo_openapi.endpoints.portfolio import balances
-    from saxo_openapi.endpoints.portfolio import orders as port_orders
-    from saxo_openapi.endpoints.trading import orders
+    import saxo_api_client
+    from saxo_api_client import API
+    from saxo_api_client.endpoints.portfolio import balances
+    from saxo_api_client.endpoints.portfolio import orders as port_orders
+    from saxo_api_client.endpoints.trading import orders
 except ImportError:
-    logger.error("saxo_openapi not installed.")
+    logger.error("saxo_api_client not installed.")
     sys.exit(1)
 
 
 def get_account_key(client: API) -> tuple[str, str]:
     """Get the first available AccountKey and ClientKey."""
     # Try fetching accounts directly
-    from saxo_openapi.endpoints.portfolio import accounts
+    from saxo_api_client.endpoints.portfolio import accounts
 
     r_acc = accounts.AccountsMe()
     client.request(r_acc)

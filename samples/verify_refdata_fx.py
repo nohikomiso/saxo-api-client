@@ -24,11 +24,11 @@ as a JSON object with the following structure:
   - errors: List of error messages encountered
 
 Usage:
-    uv run python libs/saxo_openapi/samples/verify_refdata_fx.py
+    uv run python libs/saxo_api_client/samples/verify_refdata_fx.py
 
 Requirements:
     - .env file with SAXO_24H_TOKEN environment variable
-    - saxo_openapi library installed
+    - saxo_api_client library installed
     - Network connectivity to Saxo Bank API
 """
 
@@ -51,15 +51,15 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 try:
-    import saxo_openapi
-    from saxo_openapi.endpoints.referencedata import (
+    import saxo_api_client
+    from saxo_api_client.endpoints.referencedata import (
         currencies,
         currencypairs,
         instruments,
     )
 except ImportError as e:
-    logger.error("Failed to import saxo_openapi: %s", str(e))
-    logger.error("Please ensure saxo_openapi is installed: uv add saxo-openapi")
+    logger.error("Failed to import saxo_api_client: %s", str(e))
+    logger.error("Please ensure saxo_api_client is installed: uv add saxo-api-client")
     sys.exit(1)
 
 
@@ -88,7 +88,7 @@ def main() -> int:
 
     # Initialize API client
     try:
-        client = saxo_openapi.API(access_token=token)
+        client = saxo_api_client.API(access_token=token)
     except ValueError as e:
         logger.error("Authentication failed - Invalid token: %s", str(e))
         logger.error("Please verify SAXO_24H_TOKEN is valid and not expired")

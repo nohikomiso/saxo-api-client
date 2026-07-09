@@ -3,187 +3,187 @@
     "endpoints": {
       "endpoints/rootservices/user.py": {
         "lines": 18,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/rootservices/user.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/rootservices/user.py"
       },
       "endpoints/rootservices/sessions.py": {
         "lines": 55,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/rootservices/sessions.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/rootservices/sessions.py"
       },
       "endpoints/rootservices/diagnostics.py": {
         "lines": 91,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/rootservices/diagnostics.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/rootservices/diagnostics.py"
       },
       "endpoints/rootservices/base.py": {
         "lines": 23,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/rootservices/base.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/rootservices/base.py"
       },
       "endpoints/rootservices/subscriptions.py": {
         "lines": 22,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/rootservices/subscriptions.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/rootservices/subscriptions.py"
       },
       "endpoints/rootservices/features.py": {
         "lines": 47,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/rootservices/features.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/rootservices/features.py"
       },
       "endpoints/referencedata/timezones.py": {
         "lines": 18,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/referencedata/timezones.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/referencedata/timezones.py"
       },
       "endpoints/referencedata/algostrategies.py": {
         "lines": 43,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/referencedata/algostrategies.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/referencedata/algostrategies.py"
       },
       "endpoints/referencedata/instruments.py": {
         "lines": 76,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/referencedata/instruments.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/referencedata/instruments.py"
       },
       "endpoints/referencedata/cultures.py": {
         "lines": 18,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/referencedata/cultures.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/referencedata/cultures.py"
       },
       "endpoints/referencedata/base.py": {
         "lines": 26,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/referencedata/base.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/referencedata/base.py"
       },
       "endpoints/referencedata/currencypairs.py": {
         "lines": 18,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/referencedata/currencypairs.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/referencedata/currencypairs.py"
       },
       "endpoints/referencedata/exchanges.py": {
         "lines": 43,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/referencedata/exchanges.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/referencedata/exchanges.py"
       },
       "endpoints/referencedata/languages.py": {
         "lines": 18,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/referencedata/languages.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/referencedata/languages.py"
       },
       "endpoints/referencedata/currencies.py": {
         "lines": 18,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/referencedata/currencies.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/referencedata/currencies.py"
       },
       "endpoints/referencedata/countries.py": {
         "lines": 18,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/referencedata/countries.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/referencedata/countries.py"
       },
       "endpoints/referencedata/standarddates.py": {
         "lines": 45,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/referencedata/standarddates.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/referencedata/standarddates.py"
       },
       "endpoints/portfolio/netpositions.py": {
         "lines": 99,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/portfolio/netpositions.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/portfolio/netpositions.py"
       },
       "endpoints/portfolio/balances.py": {
         "lines": 84,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/portfolio/balances.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/portfolio/balances.py"
       },
       "endpoints/portfolio/orders.py": {
         "lines": 102,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/portfolio/orders.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/portfolio/orders.py"
       },
       "endpoints/portfolio/users.py": {
         "lines": 54,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/portfolio/users.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/portfolio/users.py"
       },
       "endpoints/portfolio/positions.py": {
         "lines": 116,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/portfolio/positions.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/portfolio/positions.py"
       },
       "endpoints/portfolio/base.py": {
         "lines": 31,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/portfolio/base.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/portfolio/base.py"
       },
       "endpoints/portfolio/closedpositions.py": {
         "lines": 127,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/portfolio/closedpositions.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/portfolio/closedpositions.py"
       },
       "endpoints/portfolio/accountgroups.py": {
         "lines": 59,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/portfolio/accountgroups.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/portfolio/accountgroups.py"
       },
       "endpoints/portfolio/exposure.py": {
         "lines": 125,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/portfolio/exposure.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/portfolio/exposure.py"
       },
       "endpoints/portfolio/clients.py": {
         "lines": 71,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/portfolio/clients.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/portfolio/clients.py"
       },
       "endpoints/portfolio/accounts.py": {
         "lines": 121,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/portfolio/accounts.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/portfolio/accounts.py"
       },
       "endpoints/chart/base.py": {
         "lines": 31,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/chart/base.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/chart/base.py"
       },
       "endpoints/chart/charts.py": {
         "lines": 77,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/chart/charts.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/chart/charts.py"
       },
       "endpoints/accounthistory/historicalpositions.py": {
         "lines": 20,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/accounthistory/historicalpositions.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/accounthistory/historicalpositions.py"
       },
       "endpoints/accounthistory/base.py": {
         "lines": 29,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/accounthistory/base.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/accounthistory/base.py"
       },
       "endpoints/accounthistory/performance.py": {
         "lines": 21,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/accounthistory/performance.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/accounthistory/performance.py"
       },
       "endpoints/accounthistory/accountvalues.py": {
         "lines": 18,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/accounthistory/accountvalues.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/accounthistory/accountvalues.py"
       },
       "endpoints/eventnotificationservices/clientactivities.py": {
         "lines": 68,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/eventnotificationservices/clientactivities.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/eventnotificationservices/clientactivities.py"
       },
       "endpoints/eventnotificationservices/base.py": {
         "lines": 31,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/eventnotificationservices/base.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/eventnotificationservices/base.py"
       },
       "endpoints/valueadd/base.py": {
         "lines": 31,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/valueadd/base.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/valueadd/base.py"
       },
       "endpoints/valueadd/pricealerts.py": {
         "lines": 101,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/valueadd/pricealerts.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/valueadd/pricealerts.py"
       },
       "endpoints/trading/orders.py": {
         "lines": 54,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/trading/orders.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/trading/orders.py"
       },
       "endpoints/trading/prices.py": {
         "lines": 64,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/trading/prices.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/trading/prices.py"
       },
       "endpoints/trading/infoprices.py": {
         "lines": 75,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/trading/infoprices.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/trading/infoprices.py"
       },
       "endpoints/trading/positions.py": {
         "lines": 54,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/trading/positions.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/trading/positions.py"
       },
       "endpoints/trading/base.py": {
         "lines": 31,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/trading/base.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/trading/base.py"
       },
       "endpoints/trading/allocationkeys.py": {
         "lines": 54,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/trading/allocationkeys.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/trading/allocationkeys.py"
       },
       "endpoints/trading/messages.py": {
         "lines": 75,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/trading/messages.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/trading/messages.py"
       },
       "endpoints/trading/optionschain.py": {
         "lines": 76,
-        "path": "libs/saxo_openapi/saxo_openapi/endpoints/trading/optionschain.py"
+        "path": "libs/saxo_api_client/saxo_api_client/endpoints/trading/optionschain.py"
       }
     },
     "total_lines": 2496,

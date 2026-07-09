@@ -26,11 +26,11 @@
 #### Example
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.trading as tr
+import saxo_api_client
+import saxo_api_client.endpoints.trading as tr
 import json
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 data = {
     "Uic": 21,
     "BuySell": "Buy",
@@ -67,11 +67,11 @@ print(json.dumps(r.response, indent=2))
 #### Example
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.trading as tr
+import saxo_api_client
+import saxo_api_client.endpoints.trading as tr
 import json
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 data = {
     "OrderId": "12345678",
     "Amount": 200,
@@ -105,11 +105,11 @@ print(json.dumps(r.response, indent=2))
 #### Example
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.trading as tr
+import saxo_api_client
+import saxo_api_client.endpoints.trading as tr
 import json
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 OrderIds = "12345678,87654321"
 params = {"AccountKey": "AccountKey_Here"}
 r = tr.orders.CancelOrders(OrderIds=OrderIds, params=params)
@@ -139,11 +139,11 @@ print(json.dumps(r.response, indent=2))
 #### Example
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.trading as tr
+import saxo_api_client
+import saxo_api_client.endpoints.trading as tr
 import json
 
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 data = {
     "Uic": 21,
     "BuySell": "Buy",

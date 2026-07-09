@@ -7,9 +7,9 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-from saxo_openapi.exceptions import OpenAPIError
-from saxo_openapi.saxo_openapi import API
-from saxo_openapi.trace import (
+from saxo_api_client.exceptions import OpenAPIError
+from saxo_api_client.client import API
+from saxo_api_client.trace import (
     ApiTraceWriter,
     endpoint_label,
     mask_secrets,

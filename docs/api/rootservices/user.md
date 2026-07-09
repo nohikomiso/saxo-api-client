@@ -20,14 +20,14 @@ GET openapi/root/v1/user/
 ### コード例
 
 ```python
-import saxo_openapi
+import saxo_api_client
 import json
 
 # clientのインスタンス化
-client = saxo_openapi.API(access_token="YOUR_ACCESS_TOKEN")
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 
 # リクエストの作成と実行
-r = saxo_openapi.endpoints.rootservices.user.User()
+r = saxo_api_client.endpoints.rootservices.user.User()
 client.request(r)
 
 # レスポンスの確認

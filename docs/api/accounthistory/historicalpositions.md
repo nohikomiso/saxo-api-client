@@ -19,11 +19,11 @@
 ### 使用例
 
 ```python
-import saxo_openapi
-import saxo_openapi.endpoints.accounthistory as ah
+import saxo_api_client
+import saxo_api_client.endpoints.accounthistory as ah
 import json
 
-client = saxo_openapi.API(access_token=...)
+client = saxo_api_client.API(access_token=...)
 ClientKey = 'Cf4xZWiYL6W1nMKpygBLLA=='
 params = {
     'FromDate': '2019-03-01',

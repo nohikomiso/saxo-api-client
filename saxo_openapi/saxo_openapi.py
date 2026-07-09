@@ -487,7 +487,12 @@ class API:
             request_args["params"] = params
 
         if hasattr(endpoint, "data") and endpoint.data:
-            request_args["json"] = endpoint.data
+            if hasattr(endpoint, "RequestModel") and endpoint.RequestModel is not None:
+                # Validate and serialize with Pydantic FlexModel (Layer 1) before sending
+                validated_model = endpoint.RequestModel.model_validate(endpoint.data)
+                request_args["json"] = validated_model.model_dump(by_alias=True, exclude_none=True)
+            else:
+                request_args["json"] = endpoint.data
 
         # if any parameter for request then merge them
         request_args.update(self._request_params)
@@ -507,8 +512,13 @@ class API:
 
                 elif not (hasattr(endpoint, "RESPONSE_DATA") and endpoint.RESPONSE_DATA == "text"):
                     # if not explicitely set to 'text' asume JSON
-                    content = response.content.decode("utf-8")
-                    content = json.loads(content)
+                    if hasattr(endpoint, "ResponseModel") and endpoint.ResponseModel is not None:
+                        # 💡 ResponseModel がある場合は、JSON文字列から直接Pydanticモデルにパース（高速）
+                        content = endpoint.ResponseModel.model_validate_json(response.content)
+                    else:
+                        # 後方互換性：Pydantic未対応のエンドポイントはdictを返す
+                        content = response.content.decode("utf-8")
+                        content = json.loads(content)
 
                 else:
                     content = response.content.decode("utf-8")

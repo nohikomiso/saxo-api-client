@@ -5,6 +5,9 @@ from typing import Any
 from ..decorators import endpoint
 from .base import Trading
 
+from ...models.openapi import (
+    TradeOrdersRequest, 
+)
 
 @endpoint("openapi/trade/v2/orders", "POST")
 class Order(Trading):
@@ -12,6 +15,7 @@ class Order(Trading):
 
     See: docs/api/trading/orders.md#order
     """
+    RequestModel = TradeOrdersRequest
 
     def __init__(self, data: dict[str, Any]) -> None:
         super(Order, self).__init__()

@@ -6,6 +6,12 @@ from typing import Any
 
 class APIRequest(metaclass=ABCMeta):
     """Base Class for API-request classes."""
+    
+    # ダイレクトパース用のPydanticモデル（設定されている場合はこれを使ってパースする）
+    ResponseModel: type[Any] | None = None
+    
+    # 送信直前バリデーション用のPydanticモデル
+    RequestModel: type[Any] | None = None
 
     @abstractmethod
     def __init__(self, endpoint: str, expected_status: int, method: str = "GET") -> None:

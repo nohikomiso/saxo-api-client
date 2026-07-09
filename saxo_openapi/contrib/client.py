@@ -17,13 +17,6 @@ from saxo_openapi.contrib.orders.helper import tie_account_to_order
 from saxo_openapi.contrib.util.instrument_to_uic import InstrumentToUic
 from saxo_openapi.contrib.session import account_info
 
-# NOTE: For MarketScheduleCache we import dynamically to avoid circular dependencies
-# if trading_core is loaded later or as a separate package.
-try:
-    from trading_core.market.market_schedule import MarketScheduleCache
-except ImportError:
-    MarketScheduleCache = None
-
 
 class SaxoClient:
     """
@@ -41,12 +34,6 @@ class SaxoClient:
         self._api = API(access_token=access_token, auth_client=auth_client)
         self._account_key = None
         self._instrument_cache: dict[str, dict] = {}
-        
-        # Initialize market schedule cache if available
-        if MarketScheduleCache:
-            self._market_schedule = MarketScheduleCache(self._api)
-        else:
-            self._market_schedule = None
 
     @property
     def account_key(self) -> str:
@@ -135,21 +122,14 @@ class SaxoClient:
     def get_current_session_state(self, asset_type: str, symbol: Optional[str] = None, uic: Optional[int] = None) -> Optional[str]:
         """
         Get the raw state of the current trading session (e.g. 'AutomatedTrading', 'Closed').
-        Leverages MarketScheduleCache if available.
+        Queries the Saxo TradingSchedule endpoint directly.
         """
         uic_resolved = self._resolve_uic(uic, symbol, asset_type)
         
-        if self._market_schedule:
-            self._market_schedule.fetch_and_cache(uic_resolved, asset_type)
-            session = self._market_schedule.get_current_session(uic_resolved, asset_type)
-            if session:
-                return session.get("State")
-            return "Closed"
-            
-        # Fallback to direct API call if cache component not found
+        # Fetch schedule from the API
         schedule = self.get_market_schedule(asset_type=asset_type, uic=uic_resolved)
         sessions = schedule.get("Sessions", [])
-        # Simplified fallback logic (assuming caller uses MarketScheduleCache in production)
+        
         if not sessions:
             return "Closed"
         return sessions[0].get("State", "Closed")
@@ -160,11 +140,8 @@ class SaxoClient:
         by the exchange for this instrument.
         """
         uic_resolved = self._resolve_uic(uic, symbol, asset_type)
-        if self._market_schedule:
-            self._market_schedule.fetch_and_cache(uic_resolved, asset_type)
-            return self._market_schedule.is_market_open(uic=uic_resolved, asset_type=asset_type, order_type=order_type)
         
-        # Fallback: Just check if state is AutomatedTrading
+        # Check if state is AutomatedTrading
         state = self.get_current_session_state(asset_type=asset_type, uic=uic_resolved)
         return state == "AutomatedTrading"
 

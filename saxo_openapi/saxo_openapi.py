@@ -116,19 +116,24 @@ class API:
 
     def __init__(
         self,
-        access_token: str | None,
+        access_token: str | None = None,
         environment: str = "simulation",
         headers: dict[str, str] | None = None,
         request_params: dict[str, Any] | None = None,
         trace_dir: str | Path | None = None,
         trace_enabled: bool | None = None,
+        auth_client: Any | None = None,
     ) -> None:
         """Instantiate an API-client instance of saxo_openapi API wrapper.
 
         Parameters
         ----------
         access_token : string
-            Provide a valid access token.
+            Provide a valid access token. Optional if auth_client is provided.
+            
+        auth_client : SaxoAuthClient (optional)
+            Provide an authenticated SaxoAuthClient instance. If provided, the API
+            will dynamically fetch the latest access_token from this client.
 
         environment : dict
             Provide the environment for saxo_openapi REST api. Valid values:
@@ -176,15 +181,22 @@ class API:
             self.environment = environment
 
         self.access_token = access_token
+        self.auth_client = auth_client
+        
+        if not self.access_token and not self.auth_client:
+            raise ValueError("Either 'access_token' or 'auth_client' must be provided.")
+
         self.environment = environment
         self.client = requests.Session()
         self.client.stream = False
         self._request_params = request_params if request_params else {}
         self.rate_limiter = RateLimiter()
 
-        # personal token authentication
+        # initial personal token authentication (if auth_client is provided, this will be dynamically updated in __request)
         if self.access_token:
             self.client.headers["Authorization"] = "Bearer " + self.access_token
+        elif self.auth_client and getattr(self.auth_client, "logged_in", False):
+            self.client.headers["Authorization"] = "Bearer " + self.auth_client.access_token
 
         self.client.headers.update(DEFAULT_HEADERS)
         if headers:
@@ -311,6 +323,10 @@ class API:
         func = getattr(self.client, method)
         headers = headers if headers else {}
         response = None
+
+        # Dynamically inject the latest access token from auth_client if available
+        if getattr(self, "auth_client", None) and getattr(self.auth_client, "logged_in", False):
+            self.client.headers["Authorization"] = "Bearer " + self.auth_client.access_token
 
         # Check rate limits before making the request
         self.rate_limiter.wait_if_needed()

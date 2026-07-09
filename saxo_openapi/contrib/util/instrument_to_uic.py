@@ -51,11 +51,33 @@ def InstrumentToUic(client, AccountKey, spec, assettype=AssetType.FxSpot):
         # create the request to fetch Instrument info
         r = rd.instruments.Instruments(params=params)
         rv = client.request(r)
-        if len(rv["Data"]) == 1:
-            del spec["Instrument"]
-            spec.update({"Uic": rv["Data"][0]["Identifier"]})
-
+        
+        data = rv.get("Data", [])
+        if not data:
+            raise ValueError("No instruments found for: {}".format(spec["Instrument"]))
+            
+        uic = None
+        if len(data) == 1:
+            uic = data[0]["Identifier"]
         else:
-            raise ValueError("Got multiple instruments for: {}".format(spec["Instrument"]))
+            # 複数ヒットした場合の賢い絞り込みロジック
+            # 1. Identifier が PrimaryListing と一致しているもの（本家）を優先
+            primary_matches = [item for item in data if item.get("Identifier") == item.get("PrimaryListing")]
+            
+            if len(primary_matches) == 1:
+                uic = primary_matches[0]["Identifier"]
+            elif len(primary_matches) > 1:
+                # それでも複数ある場合は、ExchangeIdが指定されていればそれを使う、等も考えられるが
+                # まずは先頭を採用してログを出すか、最初に見つかったものを返す
+                uic = primary_matches[0]["Identifier"]
+            else:
+                # PrimaryListing が一致するものがない場合（珍しいケース）は先頭を返す
+                uic = data[0]["Identifier"]
+
+        if uic is not None:
+            del spec["Instrument"]
+            spec.update({"Uic": uic})
+        else:
+            raise ValueError("Could not resolve Uic for: {}".format(spec["Instrument"]))
 
     return spec

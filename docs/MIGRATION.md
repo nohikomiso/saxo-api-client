@@ -185,12 +185,51 @@ class AccountBalancesMe(endpoints.AccountBalancesMe):
 
 ## AccountBalancesMe
 
-### 概要
-ログイン中のクライアントの残高を取得します。
+### APIリファレンスとスキーマ定義の活用
 
-### エンドポイント
-- **メソッド**: GET
-- **パス**: `/openapi/port/v1/balances/me`
+AIアシスタントは、必要に応じて以下のファイルを参照し、正確なパラメータや型情報を取得します。
+
+- **`docs/api/`**: エンドポイントごとの詳細なMarkdownドキュメント
+- **`docs/schemas/`**: Pydanticベースの正確なJSON Schema（自動生成済み）
+
+---
+
+## 認証基盤の統合 (No More Saxo-APY)
+
+旧環境では、OAuth 2.0 認証を行うために外部の `Saxo-APY` リポジトリを利用することが推奨されていました。
+しかし、本バージョンのアーキテクチャ改修により、**OAuth 2.0 クライアント（ローカルリダイレクトサーバーを含む）が完全に `saxo_openapi` 内部に統合されました**。
+
+今後は `Saxo-APY` 等の外部パッケージは一切不要となります。
+詳細は [認証ガイド(authentication.md)](authentication.md) を参照してください。
+
+---
+
+## 新アーキテクチャ: 3-Tier ArchitectureとPydantic FlexModel
+
+今回の AI-First 移行において、ドキュメントの分離だけでなく、**「SaxoBank API 特有の複雑さ（Uic解決、AccountKey注入など）」を完全に隠蔽する3層アーキテクチャ** が確立されました。
+
+### 1. Layer 3 (High-Level API - 推奨)
+- **代表クラス**: `SaxoTrader`, `OptionTrader` (`saxo_openapi.contrib.trader` など)
+- **役割**: 人間（およびAIアシスタント）が最も直感的に使える最上位APIです。
+- **特徴**:
+  - `market_order(Symbol="AAPL", AssetType="Stock")` のように、**ティッカーシンボル**での注文が可能です。
+  - 裏側で `PrimaryListing` を用いた安全なUIC自動解決ロジックが走り、Saxo特有の「複数取引所ヒット問題」を自動回避します。
+  - `AccountKey` の自動注入や、複雑なオーダー辞書の構築をすべて隠蔽します。
+
+### 2. Layer 2 (Order Builders)
+- **代表クラス**: `MarketOrder`, `LimitOrder`, `StopOrder` (`saxo_openapi.contrib.orders` など)
+- **役割**: Layer 3 の内部で使われるか、あるいは Layer 3 では対応しきれない特殊な条件の注文を構築するための中級者向けヘルパー群です。
+- **特徴**:
+  - 手動でパラメータを組み立てたい場合や、特定のアルゴリズムトレードで細かい制御が必要な場合に使用します。
+
+### 3. Layer 1 (OpenAPI FlexModels)
+- **代表クラス**: `TradeOrdersRequest` 等 (`saxo_openapi.models` 法下の自動生成 Pydantic モデル)
+- **役割**: API送信直前に自動介入して、Saxoの厳格なJSONスキーマに基づくバリデーションとシリアライズを行うインフラストラクチャ層です。
+- **特徴**:
+  - すべてのモデルは `_FlexModel` (`extra='allow'`) を継承しており、Saxo側での将来のAPI変更（新フィールド追加など）でクラッシュしない堅牢な設計（AI-First Resilience）となっています。
+  - 人間が直接インスタンス化して使うことはほぼありません。
+
+この3層構造により、「**基本は Layer 3 (`SaxoTrader`) を使い、必要に応じて Layer 2/1 に降りる**」という明確なベストプラクティスが生まれました。
 
 ### パラメータ
 なし

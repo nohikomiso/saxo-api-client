@@ -1,75 +1,103 @@
 # Saxo-OpenAPI (AI-Ready)
 
+English | [日本語](./README.ja.md)
+
+---
+
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Python](https://img.shields.io/badge/python-3.13+-blue.svg)
 ![AI-First](https://img.shields.io/badge/AI--First-Optimized-success.svg)
 ![Type Safety](https://img.shields.io/badge/Type%20Safety-Strictly%20Typed-blue.svg)
 ![Docs](https://img.shields.io/badge/Docs-AI--Ready-orange.svg)
 
-Saxo Bank OpenAPI を Python から効率的かつ安全に利用するための、**AI アシスタントへの最適化 (AI-First)** を施した現代的なクライアントライブラリです。
+A modern client library designed to access Saxo Bank OpenAPI from Python, featuring **optimizations for AI assistants (AI-First)** to ensure efficiency and safety.
 
-このライブラリは、オリジナルの [hootnot/saxo_openapi](https://github.com/hootnot/saxo_openapi) をベースに、AI 時代の開発フローに合わせてアーキテクチャから再設計されたフォーク・バージョンです。**今日の発展は、オリジナルの作者である hootnot 氏による多大なる初期の努力と実装があったからこそ実現しました。**
-
----
-
-## 💎 特徴：AI-First Documentation
-
-本ライブラリの最大の特徴は、AI アシスタント（Claude, GPT-4, Gemini 等）が最小限のトークン消費で正確な情報を取得し、ユーザーをサポートできるように設計されている点です。
-
-1. **ドキュメントの完全分離**: Python コードから詳細な docstring を外部の Markdown ファイル（`docs/api/`）へ移管。AI は必要な時に必要なドキュメントだけを参照するため、コンテキストを節約できます。
-2. **AI ナビゲーション (`.ai/index.json`)**: 全エンドポイント、カテゴリ、ユースケースを構造化された JSON メタデータで管理。AI は目的のエンドポイントを瞬時に検索可能です。
-3. **豊富な実行例とスキーマ**: 275個以上の JSON Schema (`docs/schemas/`) と、すぐに試せるワークフロー例 (`docs/examples/`) が用意されています。
-4. **厳格な型定義 (Python 3.13+)**: `mypy` 等での静的解析を前提とした設計により、開発時のバグを未然に防ぎます。
-5. **動的レート制限処理**: API からの 429 エラーを検知し、リセット時間を動的に解析して自動待機・リトライを行います。
-6. **強力な認証サポート**: OAuth 2.0 認証とセッション管理は、[Saxo-APY (認証クライアント)](https://github.com/nohikomiso/saxo-apy) との連携を強く推奨します。
+This library is a fork and re-architected version of the original [hootnot/saxo_openapi](https://github.com/hootnot/saxo_openapi) optimized for modern AI-assisted development workflows. **Today's advancement is built on the extensive initial efforts and implementations of the original author, hootnot.**
 
 ---
 
-## 📚 ドキュメントポータル
+## 💎 Key Features: AI-First Documentation
 
-詳細な情報は `docs/` ディレクトリ内の各ガイドを参照してください。
+The defining feature of this library is its design, which allows AI assistants (Claude, GPT-4, Gemini, etc.) to retrieve accurate information and support developers with minimal token consumption.
 
-- **[総合インデックス (docs/README.md)](docs/README.md)** - ドキュメント全体の入り口
-- **[クイックスタート (docs/quickstart.md)](docs/quickstart.md)** - 5分で最初のリクエストを実行
-- **[認証ガイド (docs/authentication.md)](docs/authentication.md)** - 接続設定とトークン管理
-- **[AI-First 移行ガイド (docs/MIGRATION.md)](docs/MIGRATION.md)** - 旧アーキテクチャからの変更点
+1. **Separation of Documentation**: Detailed docstrings have been offloaded from the Python code to external Markdown files (`docs/api/`). AI assistants only read documentation when necessary, conserving context window space.
+2. **AI Navigation Map (`.ai/index.json`)**: All endpoints, categories, and use cases are indexed in structured JSON metadata. AI assistants can find target endpoints instantly.
+3. **Rich Examples and Schemas**: Includes over 275 JSON Schemas (`docs/schemas/`) and ready-to-run workflow examples (`docs/examples/`).
+4. **Strict Typing (Python 3.13+)**: Designed for static analysis using tools like `mypy` to prevent runtime bugs before they happen.
+5. **Dynamic Rate Limit Handling**: Automatically detects HTTP 429 rate limit errors from the API, dynamically parses the rate limit reset time, waits, and retries.
+6. **Robust Authentication Support**: Fully integrated OAuth 2.0 authentication and session management. No external libraries required.
 
 ---
 
-## 🚀 クイックスタート
+## 📚 Documentation Portal
 
-### インストール
+Please refer to the guides inside the `docs/` directory for detailed information:
 
-**pip を使用する場合**
+- **[Master Index (docs/README.md)](docs/README.md)** - Entry point to all documentation.
+- **[Quick Start Guide (docs/quickstart.md)](docs/quickstart.md)** - Run your first request in 5 minutes.
+- **[Authentication Guide (docs/authentication.md)](docs/authentication.md)** - Connection configuration and token lifecycle.
+- **[AI-First Migration Guide (docs/MIGRATION.md)](docs/MIGRATION.md)** - Key differences from the legacy library architecture.
+
+---
+
+## 🚀 Quick Start
+
+### Installation
+
+**Using pip**
 ```bash
 pip install git+https://github.com/nohikomiso/saxo-openapi.git
 ```
 
-**uv を使用する場合**
+**Using uv**
 ```bash
 uv add git+https://github.com/nohikomiso/saxo-openapi.git
 ```
 
-### 最初のリクエスト
+### Your First Request
+
+### Your First Request (Using SaxoClient Facade)
+
+The `SaxoClient` is the unified facade class that provides an intuitive, one-liner interface for all common trading operations, completely hiding the complex underlying endpoints.
 
 ```python
-import os
-from saxo_openapi import API
-import saxo_openapi.endpoints.portfolio as pf
+import json
+from saxo_openapi.contrib.client import SaxoClient
+from saxo_openapi.auth import SaxoAuthClient
+from saxo_openapi import AssetType, OrderType
 
-# クライアントの初期化（環境変数からトークンを取得）
-client = API(access_token=os.getenv("SAXO_ACCESS_TOKEN"))
+# Optional: Define a callback to securely save the token when it refreshes
+def save_token(token_data):
+    with open("token.json", "w") as f:
+        json.dump(token_data.model_dump(), f)
 
-# 残高確認リクエスト（詳細は docs/api/portfolio/balances.md を参照）
-r = pf.balances.AccountBalancesMe()
-rv = client.request(r)
+# 1. Initialize the Auth Client and login
+auth = SaxoAuthClient(app_config="app_config.json", on_token_refresh=save_token)
+auth.login(launch_browser=True, catch_redirect=True)
 
-print(rv)
+# 2. Initialize the ultimate facade client
+client = SaxoClient(auth_client=auth)
+
+# Check account balance with a single line
+balance = client.get_account_balance()
+print("Balance:", balance)
+
+# Safely check if the market is open and the order is accepted
+if client.is_order_accepted(symbol="AAPL", asset_type=AssetType.CfdOnStock, order_type=OrderType.Market):
+    # Place a market order without worrying about Uic resolution
+    response = client.market_order(
+        symbol="AAPL",
+        amount=10,
+        asset_type=AssetType.CfdOnStock
+    )
+    print("Order placed:", response)
+else:
+    print("Market is closed or order type not accepted.")
 ```
 
-### API 送受信トレース（調査・実験用）
+### API Request/Response Tracing (For Research and Debugging)
 
-新機能や API 挙動の調査時は、クライアントで **リクエストとレスポンスのペア** をローカル JSON に保存できます（本番 01–05 では通常 OFF）。
+When researching new features or API behaviors, you can configure the client to record request and response pairs as local JSON files (usually disabled in production).
 
 ```bash
 export SAXO_OPENAPI_TRACE=1
@@ -78,82 +106,95 @@ uv run python your_research_script.py
 ```
 
 ```python
-client = API(access_token=token, trace_dir="api_traces")  # 引数でも有効化可
+client = API(access_token=token, trace_dir="api_traces")  # Can also be enabled via parameter
 ```
 
-- 保存先: `api_traces/{YYYYMMDD}/saxo_{endpoint}_{trace_id}.json`（gitignore 推奨）
-- 確定した証跡はリポジトリの `response/` へ手動で昇格（研究手順: リポジトリルート `docs/saxo-api-research-rhythm.md`）
-- トークン・AccountKey 等は自動マスク
+- Save path: `api_traces/{YYYYMMDD}/saxo_{endpoint}_{trace_id}.json` (add to gitignore).
+- Verified responses can be manually promoted to the `response/` folder of this repo.
+- Sensitive information like tokens and `AccountKey` are automatically masked.
+
+## 🏛 The 3-Tier Architecture
+
+To shield developers from the complexity of Saxo Bank's APIs (such as mandatory `AccountKey` injection and resolving Tickers to numeric `Uic`s), this library provides a robust 3-Tier Architecture.
+
+- **Layer 3 (High-Level API - Recommended)**: `SaxoTrader`, `OptionTrader`
+  - The primary interface for trading. Provides intuitive methods like `market_order(Symbol="AAPL", AssetType="Stock")`.
+  - Automatically resolves Tickers (Symbol) to `Uic` (including smart fallback via `PrimaryListing` for multiple hits).
+  - Automatically injects the `AccountKey` and constructs the necessary nested order parameters.
+- **Layer 2 (Order Builders)**: `MarketOrder`, `LimitOrder`, `StopOrder`, etc.
+  - Used for advanced customization. These helpers allow you to build complex order structures manually when Layer 3 doesn't cover your specific edge case.
+- **Layer 1 (OpenAPI FlexModels)**: Pydantic `_FlexModel` (`TradeOrdersRequest`, etc.)
+  - The infrastructure layer. Enforces strict OpenAPI JSON validation before requests are sent to Saxo. Developers rarely interact with this layer directly.
 
 ---
 
-## 🛠 推奨されるシステム構成
+## 🛠 Recommended Architecture
 
-本ライブラリを最大限に活用し、24 時間 365 日安定したアルゴリズム取引を実現するための「推奨構成（マルチサービス・アーキテクチャ）」を紹介します。
+To maximize the benefits of this library and run 24/7 stable algorithmic trading, we recommend the following "Separation of Concerns" multi-service configuration.
 
-### 1. 認証と操作の分離 (Separation of Concerns)
-認証管理と実際の取引・データ取得ロジックを別々のプロセスとして運用する構成です。
+### 1. Separation of Auth and Trading Operations
+Run the authentication manager and the trading/data execution logic in separate, independent processes.
 
-- **認証サービス (Auth Service)**: [Saxo-APY](https://github.com/nohikomiso/saxo-apy) を使用。OAuth 認証を行い、取得したトークンを常に最新の状態に保ちながらファイル（例: `saxo_token.json`）に保存し続けます。
-- **取引サービス (Trading Services)**: 本ライブラリ（Saxo-OpenAPI）を使用。保存されたトークンファイルを読み込むだけで、認証手順を気にすることなく「残高取得」「価格監視」「注文執行」といった本来のロジックに集中できます。
+- **Auth Service (using [Saxo-APY](https://github.com/nohikomiso/saxo-apy))**: Handles OAuth logins, keeps the session alive, and writes the latest token to a local file (e.g., `saxo_token.json`).
+- **Trading Services (using Saxo-OpenAPI)**: Simply reads the saved token file to execute commands like balance retrieval, price monitoring, or orders without needing to handle the OAuth flow directly.
 
-### 2. メリット
-- **堅牢性**: 認証エラーが発生しても、取引ロジック自体を再起動することなく、認証サービス側で復旧を試みることができます。
-- **拡張性**: 1 つの共通トークンファイルを参照することで、「監視サービス」「執行サービス」「通知サービス」など、複数の独立したプロセスを容易に追加・同時稼働させることが可能です。
-
----
-
-## ⚠️ 注意事項：ストリーミング機能について
-
-本ライブラリ（Saxo-OpenAPI）に含まれるストリーミング関連の機能は、現時点では「開発途上（不十分）」な状態です。
-
-- **サポート範囲**: 主に **「ストリーミング接続の確立」** および **「サブスクリプション（購読）の登録」** 程度しか正常動作が確認されていません。
-- **不足している機能**: 受信メッセージの効率的なデコード、動的な再接続ロジック、複雑な並列処理、およびパフォーマンスの最適化などは実装されていません。
-- **推奨事項**: 本格的なリアルタイムトレードや大規模なデータ取得を行う場合は、本ライブラリの内蔵機能に頼らず、**用途に合わせた独自のストリーミング受信実装を構築することを強く推奨します。**
+### 2. Advantages
+- **Robustness**: If an authentication issue occurs, the Auth Service handles recovery without needing to restart the active trading loops.
+- **Scalability**: Multiple independent micro-services (e.g., market monitor, execution engine, notifier) can run concurrently by referencing the single token file.
 
 ---
 
-## 📂 ディレクトリ構成
+## ⚠️ Disclaimer: Streaming Features
 
-- `saxo_openapi/`: ライブラリの本体コード。ロジックに集中した最小限の docstring。
-- `docs/api/`: **[メイン]** 全エンドポイントの日本語ドキュメント。
-- `docs/schemas/`: リクエスト/レスポンスの JSON Schema 群（約 270 ファイル）。
-- `docs/examples/`: 実践的なワークフロー例（残高確認、注文、ストリーミング等）。
-- `saxo_openapi/contrib/`: 注文作成を簡素化する高機能ヘルパークラス (`SaxoTrader` 等)。
-- `samples/`: **[NEW]** 実環境での動作を検証するためのサンプルスクリプト群（FX, オプション, 注文ライフサイクル等）。
-- `tests/`: ライブラリ自体の単体テスト・結合テスト。
-- `.ai/`: AI アシスタント用の構造化インデックスとメトリクス。
+The streaming features in this library (Saxo-OpenAPI) are currently under active development and considered incomplete.
+
+- **Supported Scope**: Basic connectivity establishment and resource subscription registration are tested and work.
+- **Missing Features**: Message decoding efficiency, dynamic reconnection handling, parallel processing safety, and performance optimization are not yet implemented.
+- **Recommendation**: For production real-time trading or heavy data ingestion, **do not rely on the built-in streaming features; implement your own robust stream handling instead.**
 
 ---
 
-## 🧪 検証とテスト
+## 📂 Directory Structure
 
-`samples/` ディレクトリには、実際の取引シナリオをシミュレートする検証スクリプトが豊富に用意されています：
-- `verify_lifecycle_trading.py`: 注文の発注から約定までのライフサイクル動作確認
-- `verify_refdata_fx.py`: 通貨ペアの参照データ取得
-- `verify_portfolio_fx.py`: ポートフォリオの残高・ポジション確認
+- `saxo_openapi/`: Core library source code. Compact docstrings optimized for AI tools.
+- `docs/api/`: **[Main]** Japanese documentation for all endpoints.
+- `docs/schemas/`: Over 270 JSON Schemas representing requests and responses.
+- `docs/examples/`: Practical workflow examples (balance check, order execution, streaming, etc.).
+- `saxo_openapi/contrib/`: Helper classes to simplify order construction (`SaxoTrader`, etc.).
+- `samples/`: **[New]** Example scripts to verify operations in real/SIM environments (FX, options, order lifecycles).
+- `tests/`: Unit and integration tests for the library.
+- `.ai/`: Structured index and metrics metadata for AI assistants.
 
-これらのスクリプトは、ライブラリの正しい動作を実環境で確認するための最良のリファレンスとなります。
+---
 
-また、単体テストは以下のコマンドで実行可能です：
+## 🧪 Testing & Verification
+
+The `samples/` directory contains various scripts simulating actual trading workflows:
+- `verify_lifecycle_trading.py`: Confirms the entire lifecycle of an order from submission to execution.
+- `verify_refdata_fx.py`: Fetches reference data for FX currency pairs.
+- `verify_portfolio_fx.py`: Checks portfolio balance and position configurations.
+
+These serve as excellent reference material for utilizing the library.
+
+You can also run unit tests with:
 ```bash
 pytest tests/
 ```
 
 ---
 
-## 🔗 関連リソース
+## 🔗 Related Resources
 
-- **[SaxoBank OpenAPI Docs (Markdown版)](https://github.com/nohikomiso/SaxoBank-OpenAPI-Docs)**: Saxo 公式ドキュメントの Markdown 公開版。
+- **[SaxoBank OpenAPI Docs (Markdown Version)](https://github.com/nohikomiso/SaxoBank-OpenAPI-Docs)**: A community-maintained Markdown version of Saxo's official developer documentation.
 
 ---
 
-## 🙏 謝辞 (Acknowledgments)
+## 🙏 Acknowledgments
 
-本プロジェクトの核心的なコードベース、および Saxo OpenAPI を Python で叩くための基盤は、元々 **[hootnot (GitHub)](https://github.com/hootnot)** 氏によって情熱を持って開発されました。
+The core codebase of this project and the foundation of wrapping Saxo OpenAPI in Python were passionately developed by **[hootnot (GitHub)](https://github.com/hootnot)**.
 
-氏が長年をかけて積み上げた実装、そして Saxo OpenAPI への深い理解に基づく初期の設計があったからこそ、私はこの強力な「AI-First」な新世代ライブラリへと進化させることができました。**たとえ現在のメンテナンス状況がどうあれ、氏の先駆的な貢献と多大な努力に対し、心から最大の敬意と感謝を表します。**
+The design principles established by him over years of maintenance allowed us to evolve this library into a modern "AI-First" tool. **Regardless of current maintenance status, we express our highest respect and gratitude for his pioneering work.**
 
-## ⚖️ ライセンス
+## ⚖️ License
 
-MIT License (オリジナルのライセンスを継承)。詳細は `LICENSE` を参照してください。
+MIT License (inherited from the original repository). See `LICENSE` for details.

@@ -30,12 +30,16 @@ class SinglePositionDetails(Portfolio):
         self.params = params
 
 
+from saxo_openapi.models.portfolio import PositionsMeResponse
+
+
 @endpoint("openapi/port/v1/positions/me")
 class PositionsMe(Portfolio):
-    """Get positions for the logged-in client.
+    """Get positions for the client.
 
     See: docs/api/portfolio/positions.md#positionsme
     """
+    ResponseModel = PositionsMeResponse
 
     def __init__(self, params: dict[str, Any] | None = None) -> None:
         super(PositionsMe, self).__init__()

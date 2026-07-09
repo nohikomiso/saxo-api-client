@@ -2,6 +2,7 @@ from typing import Any, Optional
 
 import saxo_openapi.definitions.orders as OD
 import saxo_openapi.endpoints.portfolio as pf
+import saxo_openapi.endpoints.portfolio.clients as pfc
 import saxo_openapi.endpoints.referencedata as rd
 import saxo_openapi.endpoints.trading as tr
 from saxo_openapi import API
@@ -70,12 +71,33 @@ class SaxoClient:
 
         return self._api.request(r)
 
+    def place_order(self, order_data: dict) -> dict:
+        """Place an order using a fully constructed order dictionary."""
+        r = tr.orders.Order(data=order_data)
+        return self._api.request(r)
+
     # ---------------------------------------------------------
     # Portfolio & Account (Read Operations)
     # ---------------------------------------------------------
+
+    def get_client_details(self) -> dict:
+        """Get client details including netting configuration."""
+        r = pfc.ClientDetailsMe()
+        return self._api.request(r)
+
+    def place_order(self, order_data: dict) -> dict:
+        """Place an order using a fully constructed order dictionary."""
+        r = tr.orders.Order(data=order_data)
+        return self._api.request(r)
+
     def get_accounts(self) -> dict:
         """Get a list of all accounts."""
         r = pf.accounts.AccountsMe()
+        return self._api.request(r)
+
+    def place_order(self, order_data: dict) -> dict:
+        """Place an order using a fully constructed order dictionary."""
+        r = tr.orders.Order(data=order_data)
         return self._api.request(r)
 
     def get_account_balance(self, client_key: Optional[str] = None) -> dict:
@@ -86,6 +108,11 @@ class SaxoClient:
             r.params = kwargs
         return self._api.request(r)
 
+    def place_order(self, order_data: dict) -> dict:
+        """Place an order using a fully constructed order dictionary."""
+        r = tr.orders.Order(data=order_data)
+        return self._api.request(r)
+
     def get_positions(self, client_key: Optional[str] = None, field_groups: str = "PositionBase,PositionView,DisplayAndFormat,Greeks,UnderlyingDisplayAndFormat") -> dict:
         """Get all open net positions with rich default fields for options trading."""
         kwargs = {"FieldGroups": field_groups}
@@ -94,12 +121,28 @@ class SaxoClient:
         r = pf.netpositions.NetPositionsMe(**kwargs)
         return self._api.request(r)
 
+    def place_order(self, order_data: dict) -> dict:
+        """Place an order using a fully constructed order dictionary."""
+        r = tr.orders.Order(data=order_data)
+        return self._api.request(r)
+
+
+    def get_open_orders(self) -> dict:
+        """Get open orders for the logged-in user."""
+        r = pf.orders.GetOpenOrdersMe()
+        return self._api.request(r)
+
     def get_active_orders(self, client_key: Optional[str] = None, status: str = "Working", field_groups: str = "DisplayAndFormat,ExchangeInfo") -> dict:
         """Get a list of active (working) orders with rich default fields."""
         kwargs = {"Status": status, "FieldGroups": field_groups}
         if client_key:
             kwargs["ClientKey"] = client_key
         r = pf.orders.OrdersMe(**kwargs)
+        return self._api.request(r)
+
+    def place_order(self, order_data: dict) -> dict:
+        """Place an order using a fully constructed order dictionary."""
+        r = tr.orders.Order(data=order_data)
         return self._api.request(r)
 
     def get_positions_query(self, client_key: Optional[str] = None, account_key: Optional[str] = None, field_groups: str = "PositionBase,PositionView,DisplayAndFormat,Greeks,UnderlyingDisplayAndFormat") -> dict:
@@ -112,6 +155,11 @@ class SaxoClient:
         r = pf.positions.PositionsQuery(params=kwargs)
         return self._api.request(r)
 
+    def place_order(self, order_data: dict) -> dict:
+        """Place an order using a fully constructed order dictionary."""
+        r = tr.orders.Order(data=order_data)
+        return self._api.request(r)
+
     def get_all_open_orders(self, client_key: Optional[str] = None, account_key: Optional[str] = None, field_groups: str = "DisplayAndFormat,ExchangeInfo") -> dict:
         """Query all open orders across the account."""
         kwargs = {"FieldGroups": field_groups}
@@ -120,6 +168,11 @@ class SaxoClient:
         if account_key:
             kwargs["AccountKey"] = account_key
         r = pf.orders.GetAllOpenOrders(params=kwargs)
+        return self._api.request(r)
+
+    def place_order(self, order_data: dict) -> dict:
+        """Place an order using a fully constructed order dictionary."""
+        r = tr.orders.Order(data=order_data)
         return self._api.request(r)
 
     # ---------------------------------------------------------
@@ -143,6 +196,11 @@ class SaxoClient:
         """Fetch trading sessions/schedule for the instrument."""
         uic_resolved = self._resolve_uic(uic, symbol, asset_type)
         r = rd.instruments.TradingSchedule(Uic=uic_resolved, AssetType=asset_type)
+        return self._api.request(r)
+
+    def place_order(self, order_data: dict) -> dict:
+        """Place an order using a fully constructed order dictionary."""
+        r = tr.orders.Order(data=order_data)
         return self._api.request(r)
 
     def get_current_session_state(self, asset_type: str, symbol: Optional[str] = None, uic: Optional[int] = None) -> Optional[str]:
@@ -175,6 +233,11 @@ class SaxoClient:
         """Get current Ask/Bid prices for the instrument."""
         uic_resolved = self._resolve_uic(uic, symbol, asset_type)
         r = tr.infoprices.InfoPrices(Uic=uic_resolved, AssetType=asset_type)
+        return self._api.request(r)
+
+    def place_order(self, order_data: dict) -> dict:
+        """Place an order using a fully constructed order dictionary."""
+        r = tr.orders.Order(data=order_data)
         return self._api.request(r)
 
     # ---------------------------------------------------------
@@ -235,6 +298,11 @@ class SaxoClient:
         r = tr.orders.CancelOrder(OrderId=order_id)
         return self._api.request(r)
 
+    def place_order(self, order_data: dict) -> dict:
+        """Place an order using a fully constructed order dictionary."""
+        r = tr.orders.Order(data=order_data)
+        return self._api.request(r)
+
     # ---------------------------------------------------------
     # Streaming & Subscriptions
     # ---------------------------------------------------------
@@ -251,9 +319,19 @@ class SaxoClient:
         r = tr.prices.CreatePriceSubscription(data=data)
         return self._api.request(r)
 
+    def place_order(self, order_data: dict) -> dict:
+        """Place an order using a fully constructed order dictionary."""
+        r = tr.orders.Order(data=order_data)
+        return self._api.request(r)
+
     def remove_price_subscription(self, context_id: str, reference_id: str) -> dict:
         """Remove a specific price subscription."""
         r = tr.prices.PriceSubscriptionRemove(ContextId=context_id, ReferenceId=reference_id)
+        return self._api.request(r)
+
+    def place_order(self, order_data: dict) -> dict:
+        """Place an order using a fully constructed order dictionary."""
+        r = tr.orders.Order(data=order_data)
         return self._api.request(r)
 
     def remove_all_subscriptions(self, context_id: str) -> dict:
@@ -262,10 +340,20 @@ class SaxoClient:
         r = RemoveMultipleActiveSubscriptions(ContextId=context_id, params={})
         return self._api.request(r)
 
+    def place_order(self, order_data: dict) -> dict:
+        """Place an order using a fully constructed order dictionary."""
+        r = tr.orders.Order(data=order_data)
+        return self._api.request(r)
+
     def get_price_quotes(self, uics: list[int], asset_type: str = "Stock") -> dict:
         """Get snapshot of current prices (Quote field group)."""
         uic_str = ",".join(map(str, uics))
         params = {"Uics": uic_str, "FieldGroups": "Quote", "AssetType": asset_type}
         r = tr.infoprices.InfoPrices(params=params)
+        return self._api.request(r)
+
+    def place_order(self, order_data: dict) -> dict:
+        """Place an order using a fully constructed order dictionary."""
+        r = tr.orders.Order(data=order_data)
         return self._api.request(r)
 

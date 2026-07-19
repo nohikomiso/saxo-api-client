@@ -83,6 +83,8 @@ print(read_guide())
 
 That guide is the source of truth for Layer 3 (`SaxoClient` / `OptionTrader`), pitfalls, and removed `SaxoTrader`. Tool-specific skill files should only **point** at it.
 
+For **endpoint / schema lookup** (not trading), prefer the PyPI MCP [`mcp-server-saxo-openapi`](https://pypi.org/project/mcp-server-saxo-openapi/) — see [Related Resources](#-related-resources).
+
 ### Your First Request (Using SaxoClient Facade)
 
 The `SaxoClient` is the unified facade class that provides an intuitive, one-liner interface for all common trading operations, completely hiding the complex underlying endpoints.
@@ -216,7 +218,34 @@ pytest tests/
 
 ## 🔗 Related Resources
 
-- **[SaxoBank OpenAPI Docs (Markdown Version)](https://github.com/nohikomiso/SaxoBank-OpenAPI-Docs)**: A community-maintained Markdown version of Saxo's official developer documentation.
+### For AI agents (preferred)
+
+Use the **OpenAPI lookup MCP** (offline reference; does **not** trade). Spec source lives in the `mcp-server-saxo-openapi` project (PyPI: [`mcp-server-saxo-openapi`](https://pypi.org/project/mcp-server-saxo-openapi/)).
+
+```json
+{
+  "mcpServers": {
+    "saxo-openapi": {
+      "command": "uvx",
+      "args": ["mcp-server-saxo-openapi"]
+    }
+  }
+}
+```
+
+CLI fallback:
+
+```bash
+uvx --from mcp-server-saxo-openapi saxo-doc-helper search-endpoints orders
+```
+
+Together with this package’s agent guide (`saxo-api-client agent-guide`): MCP = endpoint/schema facts + pitfalls; `SaxoClient` GUIDE = how to call this library.
+
+### For humans
+
+- **[SaxoBank OpenAPI Docs (Markdown)](https://github.com/nohikomiso/SaxoBank-OpenAPI-Docs)** — readable community Markdown of Saxo docs (browsing / deep reading).
+- **[Official Saxo OpenAPI](https://www.developer.saxo/openapi/referencedocs)** — vendor reference.
+- This repo’s `docs/` (when cloning) — library-oriented guides and examples.
 
 ---
 

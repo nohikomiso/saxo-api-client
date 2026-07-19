@@ -83,6 +83,8 @@ print(read_guide())
 
 Layer 3（`SaxoClient` / `OptionTrader`）、落とし穴、削除済み `SaxoTrader` の正本はここにあります。ツール固有スキルは **このガイドを指すだけ** にしてください。
 
+**エンドポイント／スキーマ参照**（発注ではない）には PyPI MCP [`mcp-server-saxo-openapi`](https://pypi.org/project/mcp-server-saxo-openapi/) を推奨 — [関連リソース](#-関連リソース) を参照。
+
 ### 最初のリクエスト（SaxoClient ファサード）
 
 `SaxoClient` は共通の取引操作をワンライナーで提供する統合ファサードで、複雑なエンドポイント層を隠蔽します。
@@ -218,7 +220,34 @@ pytest tests/
 
 ## 🔗 関連リソース
 
-- **[SaxoBank OpenAPI Docs（Markdown 版）](https://github.com/nohikomiso/SaxoBank-OpenAPI-Docs)**: Saxo 公式開発者ドキュメントのコミュニティ維持 Markdown 版
+### AI エージェント向け（推奨）
+
+**OpenAPI 参照用 MCP**（オフライン知識ベース。**発注はしない**）を使ってください。実体は `mcp-server-saxo-openapi` プロジェクト（PyPI: [`mcp-server-saxo-openapi`](https://pypi.org/project/mcp-server-saxo-openapi/)）。
+
+```json
+{
+  "mcpServers": {
+    "saxo-openapi": {
+      "command": "uvx",
+      "args": ["mcp-server-saxo-openapi"]
+    }
+  }
+}
+```
+
+CLI フォールバック:
+
+```bash
+uvx --from mcp-server-saxo-openapi saxo-doc-helper search-endpoints orders
+```
+
+本パッケージのエージェントガイド（`saxo-api-client agent-guide`）と組み合わせる: MCP = エンドポイント／スキーマ／pitfalls、GUIDE = このライブラリの呼び方。
+
+### 人間向け
+
+- **[SaxoBank OpenAPI Docs（Markdown）](https://github.com/nohikomiso/SaxoBank-OpenAPI-Docs)** — 読み物としてのコミュニティ Markdown
+- **[公式 Saxo OpenAPI](https://www.developer.saxo/openapi/referencedocs)** — ベンダー正本
+- リポジトリを clone した場合の `docs/` — ライブラリ向けガイドと例
 
 ---
 

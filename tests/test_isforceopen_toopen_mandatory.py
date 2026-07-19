@@ -24,14 +24,14 @@ from saxo_api_client.contrib.orders import (
 class TestOrderIsForceOpenParameter:
     """注文クラスの IsForceOpen パラメータのテスト"""
 
-    def test_market_order_default_isforceopen(self):
-        """MarketOrder: デフォルトで IsForceOpen=True になることを確認"""
-        order = MarketOrder(
-            Uic=12345,
-            Amount=100,
-            AssetType=OD.AssetType.Stock,
-        )
-        assert order.data["IsForceOpen"] is True
+    def test_market_order_requires_isforceopen(self):
+        """MarketOrder: IsForceOpen 省略時は TypeError"""
+        with pytest.raises(TypeError, match="IsForceOpen"):
+            MarketOrder(
+                Uic=12345,
+                Amount=100,
+                AssetType=OD.AssetType.Stock,
+            )
 
     def test_market_order_isforceopen_false(self):
         """MarketOrder: IsForceOpen=False を明示的に指定（FIFOモード）"""
@@ -53,15 +53,15 @@ class TestOrderIsForceOpenParameter:
         )
         assert order.data["IsForceOpen"] is True
 
-    def test_limit_order_default_isforceopen(self):
-        """LimitOrder: デフォルトで IsForceOpen=True になることを確認"""
-        order = LimitOrder(
-            Uic=12345,
-            Amount=100,
-            AssetType=OD.AssetType.Stock,
-            OrderPrice=50.0,
-        )
-        assert order.data["IsForceOpen"] is True
+    def test_limit_order_requires_isforceopen(self):
+        """LimitOrder: IsForceOpen 省略時は TypeError"""
+        with pytest.raises(TypeError, match="IsForceOpen"):
+            LimitOrder(
+                Uic=12345,
+                Amount=100,
+                AssetType=OD.AssetType.Stock,
+                OrderPrice=50.0,
+            )
 
     def test_limit_order_isforceopen_false(self):
         """LimitOrder: IsForceOpen=False を明示的に指定（FIFOモード）"""
@@ -85,15 +85,15 @@ class TestOrderIsForceOpenParameter:
         )
         assert order.data["IsForceOpen"] is True
 
-    def test_stop_order_default_isforceopen(self):
-        """StopOrder: デフォルトで IsForceOpen=True になることを確認"""
-        order = StopOrder(
-            Uic=12345,
-            Amount=100,
-            AssetType=OD.AssetType.Stock,
-            OrderPrice=55.0,
-        )
-        assert order.data["IsForceOpen"] is True
+    def test_stop_order_requires_isforceopen(self):
+        """StopOrder: IsForceOpen 省略時は TypeError"""
+        with pytest.raises(TypeError, match="IsForceOpen"):
+            StopOrder(
+                Uic=12345,
+                Amount=100,
+                AssetType=OD.AssetType.Stock,
+                OrderPrice=55.0,
+            )
 
     def test_stop_order_isforceopen_false(self):
         """StopOrder: IsForceOpen=False を明示的に指定（FIFOモード）"""
@@ -106,16 +106,16 @@ class TestOrderIsForceOpenParameter:
         )
         assert order.data["IsForceOpen"] is False
 
-    def test_stop_limit_order_default_isforceopen(self):
-        """StopLimitOrder: デフォルトで IsForceOpen=True になることを確認"""
-        order = StopLimitOrder(
-            Uic=12345,
-            Amount=100,
-            AssetType=OD.AssetType.Stock,
-            OrderPrice=50.0,
-            StopLimitPrice=55.0,
-        )
-        assert order.data["IsForceOpen"] is True
+    def test_stop_limit_order_requires_isforceopen(self):
+        """StopLimitOrder: IsForceOpen 省略時は TypeError"""
+        with pytest.raises(TypeError, match="IsForceOpen"):
+            StopLimitOrder(
+                Uic=12345,
+                Amount=100,
+                AssetType=OD.AssetType.Stock,
+                OrderPrice=50.0,
+                StopLimitPrice=55.0,
+            )
 
     def test_stop_limit_order_isforceopen_false(self):
         """StopLimitOrder: IsForceOpen=False を明示的に指定（FIFOモード）"""
@@ -129,15 +129,15 @@ class TestOrderIsForceOpenParameter:
         )
         assert order.data["IsForceOpen"] is False
 
-    def test_stop_if_traded_order_default_isforceopen(self):
-        """StopIfTradedOrder: デフォルトで IsForceOpen=True になることを確認"""
-        order = StopIfTradedOrder(
-            Uic=12345,
-            Amount=100,
-            AssetType=OD.AssetType.Stock,
-            OrderPrice=55.0,
-        )
-        assert order.data["IsForceOpen"] is True
+    def test_stop_if_traded_order_requires_isforceopen(self):
+        """StopIfTradedOrder: IsForceOpen 省略時は TypeError"""
+        with pytest.raises(TypeError, match="IsForceOpen"):
+            StopIfTradedOrder(
+                Uic=12345,
+                Amount=100,
+                AssetType=OD.AssetType.Stock,
+                OrderPrice=55.0,
+            )
 
     def test_stop_if_traded_order_isforceopen_false(self):
         """StopIfTradedOrder: IsForceOpen=False を明示的に指定（FIFOモード）"""
@@ -186,7 +186,7 @@ class TestOptionTraderToOpenCloseParameter:
         assert self.mock_client.request.called
         call_args = self.mock_client.request.call_args[0][0]
         assert call_args.data["ToOpenClose"] == "ToOpen"
-        assert call_args.data["BuySell"] == OD.BuySell.Buy
+        assert call_args.data["BuySell"] == OD.Direction.Buy
 
     def test_buy_option_with_to_open_close_to_close(self):
         """buy_option: to_open_close="ToClose" を指定して正常に動作"""
@@ -226,7 +226,7 @@ class TestOptionTraderToOpenCloseParameter:
 
         call_args = self.mock_client.request.call_args[0][0]
         assert call_args.data["ToOpenClose"] == "ToOpen"
-        assert call_args.data["BuySell"] == OD.BuySell.Sell
+        assert call_args.data["BuySell"] == OD.Direction.Sell
 
     def test_sell_option_with_to_open_close_to_close(self):
         """sell_option: to_open_close="ToClose" を指定して正常に動作（決済）"""
@@ -425,7 +425,7 @@ class TestOrderDataStructure:
         order_spec = trader._build_option_order(
             uic=12345,
             amount=1,
-            buy_sell=OD.BuySell.Buy,
+            buy_sell=OD.Direction.Buy,
             order_type="Limit",
             asset_type="StockOption",
             to_open_close="ToOpen",
@@ -435,7 +435,7 @@ class TestOrderDataStructure:
         assert "ToOpenClose" in order_spec
         assert order_spec["ToOpenClose"] == "ToOpen"
         assert order_spec["Uic"] == 12345
-        assert order_spec["BuySell"] == OD.BuySell.Buy
+        assert order_spec["BuySell"] == OD.Direction.Buy
         assert order_spec["OrderType"] == "Limit"
         assert order_spec["OrderPrice"] == 3.50
 

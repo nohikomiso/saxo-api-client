@@ -78,9 +78,9 @@ Keyword style: `asset_type` first; resolve with `symbol=` and/or `uic=`.
 
 ## How to deepen (if repo or docs available)
 
-1. README 3-tier section  
-2. `docs/contrib/client.md` / `option_trader.md`  
-3. `docs/examples/place_market_order.md`  
-4. Endpoint specs under `docs/api/` (clone) or Saxo OpenAPI reference online  
+1. **MCP (preferred for agents):** PyPI `mcp-server-saxo-openapi` — endpoint search, nested specs, `saxo://docs/pitfalls.md`. Not a trading client.
+2. README 3-tier section and this GUIDE  
+3. `docs/contrib/client.md` / `option_trader.md` (clone)  
+4. Human browsing: [SaxoBank OpenAPI Docs Markdown](https://github.com/nohikomiso/SaxoBank-OpenAPI-Docs) or [official reference](https://www.developer.saxo/openapi/referencedocs)
 
 Do **not** treat removed `SaxoTrader` docs/samples as current API.

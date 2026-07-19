@@ -176,6 +176,7 @@ class TestOrderCreation:
             Uic=21,
             Amount=10000,
             AssetType=OD.AssetType.FxSpot,
+            IsForceOpen=True,
         )
         assert order is not None
         data = order.data
@@ -189,6 +190,7 @@ class TestOrderCreation:
         order = MarketOrderStock(
             Uic=16350,
             Amount=100,
+            IsForceOpen=True,
         )
         assert order is not None
         data = order.data
@@ -201,6 +203,7 @@ class TestOrderCreation:
         order = MarketOrderCfdOnStock(
             Uic=211,
             Amount=10,
+            IsForceOpen=True,
         )
         assert order is not None
         data = order.data
@@ -212,6 +215,7 @@ class TestOrderCreation:
         order = MarketOrderFxSpot(
             Uic=21,
             Amount=50000,
+            IsForceOpen=True,
         )
         assert order is not None
         data = order.data
@@ -226,6 +230,7 @@ class TestOrderCreation:
             Amount=10000,
             AssetType=OD.AssetType.FxSpot,
             OrderPrice=1.1025,
+            IsForceOpen=True,
         )
         assert order is not None
         data = order.data
@@ -240,6 +245,7 @@ class TestOrderCreation:
             Uic=16350,
             Amount=100,
             OrderPrice=28.00,
+            IsForceOpen=True,
         )
         assert order is not None
         data = order.data
@@ -253,6 +259,7 @@ class TestOrderCreation:
             Uic=21,
             Amount=25000,
             OrderPrice=1.1025,
+            IsForceOpen=True,
         )
         assert order is not None
         data = order.data
@@ -266,6 +273,7 @@ class TestOrderCreation:
             Amount=10000,
             AssetType=OD.AssetType.FxSpot,
             OrderPrice=1.1000,
+            IsForceOpen=True,
         )
         assert order is not None
         data = order.data
@@ -278,6 +286,7 @@ class TestOrderCreation:
             Uic=21,
             Amount=25000,
             OrderPrice=1.1025,
+            IsForceOpen=True,
         )
         assert order is not None
         data = order.data
@@ -292,6 +301,7 @@ class TestOrderCreation:
             AssetType=OD.AssetType.CfdOnStock,
             OrderPrice=150.0,
             StopLimitPrice=149.5,
+            IsForceOpen=True,
         )
         assert order is not None
         data = order.data
@@ -306,6 +316,7 @@ class TestOrderCreation:
             Amount=1,
             OrderPrice=150.0,
             StopLimitPrice=149.5,
+            IsForceOpen=True,
         )
         assert order is not None
         data = order.data
@@ -318,6 +329,7 @@ class TestOrderCreation:
             Amount=1,
             AssetType=OD.AssetType.CfdOnStock,
             OrderPrice=150.0,
+            IsForceOpen=True,
         )
         assert order is not None
         data = order.data
@@ -330,6 +342,7 @@ class TestOrderCreation:
             Uic=211,
             Amount=1,
             OrderPrice=150.0,
+            IsForceOpen=True,
         )
         assert order is not None
         data = order.data
@@ -366,7 +379,9 @@ class TestHelperFunctions:
 
     def test_tie_account_to_order_instance(self):
         """tie_account_to_order should add AccountKey to order instance."""
-        order = MarketOrderFxSpot(Uic=21, Amount=10000)
+        order = MarketOrderFxSpot(Uic=21, Amount=10000,
+            IsForceOpen=True,
+        )
         result = tie_account_to_order("test_account_key", order)
         assert result["AccountKey"] == "test_account_key"
 
@@ -376,7 +391,9 @@ class TestOrderDataStructure:
 
     def test_market_order_data_json_serializable(self):
         """Order data should be JSON serializable."""
-        order = MarketOrderFxSpot(Uic=21, Amount=10000)
+        order = MarketOrderFxSpot(Uic=21, Amount=10000,
+            IsForceOpen=True,
+        )
         data = order.data
         json_str = json.dumps(data)
         assert json_str is not None
@@ -389,6 +406,7 @@ class TestOrderDataStructure:
             Uic=21,
             Amount=10000,
             ExternalReference="my_order_123",
+            IsForceOpen=True,
         )
         data = order.data
         assert data["ExternalReference"] == "my_order_123"
@@ -402,6 +420,7 @@ class TestOrderDataStructure:
             Amount=10000,
             TakeProfitOnFill=tp,
             StopLossOnFill=sl,
+            IsForceOpen=True,
         )
         data = order.data
         assert "Orders" in data

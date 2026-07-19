@@ -2,6 +2,8 @@
 
 English | [日本語](./README.ja.md)
 
+> Canonical README (English). The Japanese file is a translation of this document.
+
 ---
 
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
@@ -44,22 +46,42 @@ Please refer to the guides inside the `docs/` directory for detailed information
 
 ### Installation
 
-**Using pip (PyPI)**
+**Recommended (PyPI)** — works with both pip and uv:
+
 ```bash
 pip install saxo-api-client
+# or
+uv add saxo-api-client
 ```
 
-**Using pip (GitHub)**
+**Optional (GitHub tip / unreleased commits):**
+
 ```bash
 pip install git+https://github.com/nohikomiso/saxo-api-client.git
-```
-
-**Using uv**
-```bash
+# or
 uv add git+https://github.com/nohikomiso/saxo-api-client.git
 ```
 
-### Your First Request
+### For AI agents (any tool)
+
+Do **not** invent per-IDE skills that duplicate trading rules. One canonical guide ships **inside the installed package**:
+
+```bash
+saxo-api-client agent-guide
+# or
+python -m saxo_api_client.agent
+# optional: write a copy next to your project
+saxo-api-client agent-guide -o ./AGENTS_SAXO.md
+```
+
+Python:
+
+```python
+from saxo_api_client.agent import read_guide
+print(read_guide())
+```
+
+That guide is the source of truth for Layer 3 (`SaxoClient` / `OptionTrader`), pitfalls, and removed `SaxoTrader`. Tool-specific skill files should only **point** at it.
 
 ### Your First Request (Using SaxoClient Facade)
 
@@ -111,6 +133,8 @@ uv run python your_research_script.py
 ```
 
 ```python
+from saxo_api_client import API
+
 client = API(access_token=token, trace_dir="api_traces")  # Can also be enabled via parameter
 ```
 

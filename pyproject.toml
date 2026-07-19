@@ -37,12 +37,18 @@ Repository = "https://github.com/nohikomiso/saxo-api-client"
 Issues = "https://github.com/nohikomiso/saxo-api-client/issues"
 Changelog = "https://github.com/nohikomiso/saxo-api-client/blob/master/CHANGELOG.md"
 
+[project.scripts]
+saxo-api-client = "saxo_api_client.agent.cli:main"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["saxo_api_client"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"saxo_api_client/agent/GUIDE.md" = "saxo_api_client/agent/GUIDE.md"
 
 [tool.hatch.build.targets.sdist]
 include = [
@@ -52,7 +58,6 @@ include = [
   "LICENSE",
   "CHANGELOG.md",
 ]
-
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 

@@ -6,7 +6,7 @@
 
 - [OptionFinder](#optionfinder) - オプション契約の検索
 - [OptionTrader](#optiontrader) - オプション注文の発注
-- [SaxoTrader](trader.md) - FX/Stock/CFD取引用ヘルパー
+- [SaxoClient](client.md) - FX/Stock/CFD取引用ヘルパー
 
 ---
 
@@ -246,6 +246,6 @@ print(result) # {"PreCheckResult": "Ok", ...}
 ## 関連ドキュメント
 
 - [orders.md](orders.md) - 注文ヘルパークラス（MarketOrder, LimitOrder等）
-- [trader.md](trader.md) - SaxoTrader（FX/Stock/CFD取引用）
+- [client.md](client.md) - SaxoClient（FX/Stock/CFD取引用）
 - [Trading API](../api/trading/README.md) - Trading エンドポイント
 - [ReferenceData API](../api/referencedata/README.md) - 参照データエンドポイント

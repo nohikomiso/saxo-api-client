@@ -3,7 +3,7 @@
 """
 Live Order Verification Sample
 
-This script demonstrates valid order placement using SaxoTrader:
+Demonstrates order placement via SaxoClient (Layer 3):
 - Limit Orders
 - Stop Orders (Smart Routing)
 - Stop Limit Orders
@@ -15,9 +15,7 @@ Usage:
 import time
 
 import saxo_api_client.definitions.orders as OD
-import saxo_api_client.endpoints.trading as tr
-from saxo_api_client import API
-from saxo_api_client.contrib.trader import SaxoTrader
+from saxo_api_client.contrib.client import SaxoClient
 
 
 def read_token(token_file="token_demo.txt"):
@@ -25,13 +23,9 @@ def read_token(token_file="token_demo.txt"):
         return f.read().strip()
 
 
-def get_current_price(client, uic, asset_type):
-    # Use InfoPrice to get current Bid/Ask
-    # InfoPrice expects a dictionary 'params' with Uic and AssetType
+def get_current_price(client: SaxoClient, uic: int, asset_type: str) -> float:
     try:
-        r = tr.infoprices.InfoPrice(params={"Uic": uic, "AssetType": asset_type})
-        res = client.request(r)
-        # Quote object
+        res = client.get_prices(asset_type=asset_type, uic=uic)
         quote = res.get("Quote", {})
         bid = quote.get("Bid")
         ask = quote.get("Ask")
@@ -43,97 +37,92 @@ def get_current_price(client, uic, asset_type):
         return 0.0
 
 
-def place_orders(client, trader, name, uic, asset_type, default_price):
+def place_orders(client: SaxoClient, name: str, uic: int, asset_type: str, default_price: float) -> None:
     print(f"\n=== Testing {name} (UIC: {uic}, Asset: {asset_type}) ===")
 
-    # Fetch live price
     current_price = get_current_price(client, uic, asset_type)
     if current_price == 0.0:
         print(f"   Using default price estimate: {default_price}")
         current_price = default_price
 
-    # 1. Limit Order (指値) - Buy Limit Below Market
-    # 5% below for plenty buffer
+    amount = 1000 if asset_type == OD.AssetType.FxSpot else 1
+
     limit_price = current_price * 0.95
-    if asset_type == "FxSpot":
+    if asset_type == OD.AssetType.FxSpot:
         limit_price = current_price - 0.0050
-    limit_price = round(limit_price, 4 if asset_type == "FxSpot" else 2)
+    limit_price = round(limit_price, 4 if asset_type == OD.AssetType.FxSpot else 2)
 
     print(f"1. Placing Limit Order (Buy @ {limit_price})...")
     try:
-        r = trader.limit_order(
-            Uic=uic,
-            Amount=1000 if asset_type == "FxSpot" else 1,
-            OrderPrice=limit_price,
-            AssetType=asset_type,
+        r = client.limit_order(
+            asset_type=asset_type,
+            amount=amount,
+            order_price=limit_price,
+            uic=uic,
+            IsForceOpen=True,
+            ManualOrder=True,
         )
         print(f"   SUCCESS: OrderId={r['OrderId']}")
     except Exception as e:
         print(f"   FAILED: {e}")
 
-    time.sleep(1)  # Rate limit
+    time.sleep(1)
 
-    # 2. Stop Order (逆指値 -> 成行) - Buy Stop Above Market
-    # 5% above for plenty buffer
     stop_price = current_price * 1.05
-    if asset_type == "FxSpot":
+    if asset_type == OD.AssetType.FxSpot:
         stop_price = current_price + 0.0050
-    stop_price = round(stop_price, 4 if asset_type == "FxSpot" else 2)
+    stop_price = round(stop_price, 4 if asset_type == OD.AssetType.FxSpot else 2)
 
     print(f"2. Placing Stop Order (Smart Routing, Buy Stop @ {stop_price})...")
     try:
-        r = trader.stop_order(
-            Uic=uic,
-            Amount=1000 if asset_type == "FxSpot" else 1,
-            OrderPrice=stop_price,
-            AssetType=asset_type,
+        r = client.stop_order(
+            asset_type=asset_type,
+            amount=amount,
+            order_price=stop_price,
+            uic=uic,
+            IsForceOpen=True,
+            ManualOrder=True,
         )
         print(f"   SUCCESS: OrderId={r['OrderId']}")
     except Exception as e:
         print(f"   FAILED: {e}")
 
-    time.sleep(1)  # Rate limit
+    time.sleep(1)
 
-    # 3. Stop Limit Order (逆指値 -> 指値) - Buy Stop Limit Above Market
     sl_trigger = stop_price
     sl_limit = stop_price * 1.01
-    if asset_type == "FxSpot":
+    if asset_type == OD.AssetType.FxSpot:
         sl_limit = stop_price + 0.0010
-    sl_limit = round(sl_limit, 4 if asset_type == "FxSpot" else 2)
+    sl_limit = round(sl_limit, 4 if asset_type == OD.AssetType.FxSpot else 2)
 
     print(f"3. Placing Stop Limit Order (Trigger @ {sl_trigger}, Limit @ {sl_limit})...")
     try:
-        r = trader.stop_limit_order(
-            Uic=uic,
-            Amount=1000 if asset_type == "FxSpot" else 1,
-            OrderPrice=sl_trigger,
-            StopLimitPrice=sl_limit,
-            AssetType=asset_type,
+        r = client.stop_limit_order(
+            asset_type=asset_type,
+            amount=amount,
+            order_price=sl_trigger,
+            stop_limit_price=sl_limit,
+            uic=uic,
+            IsForceOpen=True,
+            ManualOrder=True,
         )
         print(f"   SUCCESS: OrderId={r['OrderId']}")
     except Exception as e:
         print(f"   FAILED: {e}")
 
-    time.sleep(1)  # Rate limit
+    time.sleep(1)
 
 
 def main():
     try:
         token = read_token("token_demo.txt")
-        client = API(access_token=token)
-        trader = SaxoTrader(client)
+        client = SaxoClient(access_token=token)
 
-        # Ensure AccountKey is loaded
-        print(f"AccountKey: {trader.account_key}")
+        print(f"AccountKey: {client.account_key}")
 
-        # --- FX Spot (EURUSD) ---
-        place_orders(client, trader, "FX Spot (EURUSD)", 21, OD.AssetType.FxSpot, 1.05)
-
-        # --- Stock (AAPL) ---
-        place_orders(client, trader, "Stock (AAPL)", 211, OD.AssetType.Stock, 200.0)
-
-        # --- CFD (AAPL) ---
-        place_orders(client, trader, "CFD on Stock (AAPL)", 211, OD.AssetType.CfdOnStock, 200.0)
+        place_orders(client, "FX Spot (EURUSD)", 21, OD.AssetType.FxSpot, 1.05)
+        place_orders(client, "Stock (AAPL)", 211, OD.AssetType.Stock, 200.0)
+        place_orders(client, "CFD on Stock (AAPL)", 211, OD.AssetType.CfdOnStock, 200.0)
 
     except Exception as e:
         print(f"Main execution error: {e}")

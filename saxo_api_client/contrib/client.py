@@ -15,23 +15,26 @@ from saxo_api_client.contrib.orders import (
     StopOrder,
 )
 from saxo_api_client.contrib.orders.helper import tie_account_to_order
-from saxo_api_client.contrib.util.instrument_to_uic import InstrumentToUic
 from saxo_api_client.contrib.session import account_info
+from saxo_api_client.contrib.util.instrument_to_uic import InstrumentToUic
 
 
 class SaxoClient:
     """
-    SaxoClient is the ultimate facade for interacting with SaxoBank API.
-    It encapsulates the raw API client, provides intuitive one-liner methods
-    for querying balances, positions, market schedules, and placing orders.
-    It completely hides the underlying "Command pattern" (Endpoint classes).
+    High-level facade for Saxo Bank OpenAPI (Layer 3).
+
+    Provides one-liner methods for balances, positions, market schedules, and
+    orders while hiding endpoint Command classes. Prefer this for FX / Stock /
+    CFD trading; use OptionTrader for options.
     """
 
-    def __init__(self, auth_client: Optional[SaxoAuthClient] = None, access_token: Optional[str] = None, request_params: Optional[dict] = None):
-        """
-        Initialize the unified client.
-        Either auth_client or access_token must be provided.
-        """
+    def __init__(
+        self,
+        auth_client: Optional[SaxoAuthClient] = None,
+        access_token: Optional[str] = None,
+        request_params: Optional[dict] = None,
+    ):
+        """Initialize with either auth_client or access_token."""
         self._api = API(access_token=access_token, auth_client=auth_client, request_params=request_params)
         self._account_key = None
         self._instrument_cache: dict[str, dict] = {}
@@ -43,9 +46,6 @@ class SaxoClient:
             self._account_key = account_info(self._api).AccountKey
         return self._account_key
 
-    # ---------------------------------------------------------
-    # Internal Helpers
-    # ---------------------------------------------------------
     def _resolve_uic(self, Uic: Optional[int], Symbol: Optional[str], AssetType: str) -> int:
         """Resolve Uic from either explicit Uic or by querying the Symbol."""
         if Uic is not None:
@@ -60,7 +60,7 @@ class SaxoClient:
         """Bind account and execute or precheck order."""
         order_spec_with_account = tie_account_to_order(self.account_key, order_spec)
         asset_type = order_spec_with_account.get("AssetType")
-        
+
         if asset_type in [OD.AssetType.Stock, OD.AssetType.StockOption]:
             order_spec_with_account.pop("IsForceOpen", None)
 
@@ -71,10 +71,9 @@ class SaxoClient:
 
         return self._api.request(r)
 
-    def place_order(self, order_data: dict) -> dict:
-        """Place an order using a fully constructed order dictionary."""
-        r = tr.orders.Order(data=order_data)
-        return self._api.request(r)
+    def place_order(self, order_data: dict | Any) -> dict:
+        """Place an order from a builder instance or fully constructed dict."""
+        return self._execute_order(order_data, validate_only=False)
 
     # ---------------------------------------------------------
     # Portfolio & Account (Read Operations)
@@ -85,19 +84,9 @@ class SaxoClient:
         r = pfc.ClientDetailsMe()
         return self._api.request(r)
 
-    def place_order(self, order_data: dict) -> dict:
-        """Place an order using a fully constructed order dictionary."""
-        r = tr.orders.Order(data=order_data)
-        return self._api.request(r)
-
     def get_accounts(self) -> dict:
         """Get a list of all accounts."""
         r = pf.accounts.AccountsMe()
-        return self._api.request(r)
-
-    def place_order(self, order_data: dict) -> dict:
-        """Place an order using a fully constructed order dictionary."""
-        r = tr.orders.Order(data=order_data)
         return self._api.request(r)
 
     def get_account_balance(self, client_key: Optional[str] = None) -> dict:
@@ -108,46 +97,44 @@ class SaxoClient:
             r.params = kwargs
         return self._api.request(r)
 
-    def place_order(self, order_data: dict) -> dict:
-        """Place an order using a fully constructed order dictionary."""
-        r = tr.orders.Order(data=order_data)
-        return self._api.request(r)
-
-    def get_positions(self, client_key: Optional[str] = None, field_groups: str = "PositionBase,PositionView,DisplayAndFormat,Greeks,UnderlyingDisplayAndFormat") -> dict:
+    def get_positions(
+        self,
+        client_key: Optional[str] = None,
+        field_groups: str = "PositionBase,PositionView,DisplayAndFormat,Greeks,UnderlyingDisplayAndFormat",
+    ) -> dict:
         """Get all open net positions with rich default fields for options trading."""
-        kwargs = {"FieldGroups": field_groups}
+        kwargs: dict[str, Any] = {"FieldGroups": field_groups}
         if client_key:
             kwargs["ClientKey"] = client_key
         r = pf.netpositions.NetPositionsMe(**kwargs)
         return self._api.request(r)
-
-    def place_order(self, order_data: dict) -> dict:
-        """Place an order using a fully constructed order dictionary."""
-        r = tr.orders.Order(data=order_data)
-        return self._api.request(r)
-
 
     def get_open_orders(self) -> dict:
         """Get open orders for the logged-in user."""
         r = pf.orders.GetOpenOrdersMe()
         return self._api.request(r)
 
-    def get_active_orders(self, client_key: Optional[str] = None, status: str = "Working", field_groups: str = "DisplayAndFormat,ExchangeInfo") -> dict:
+    def get_active_orders(
+        self,
+        client_key: Optional[str] = None,
+        status: str = "Working",
+        field_groups: str = "DisplayAndFormat,ExchangeInfo",
+    ) -> dict:
         """Get a list of active (working) orders with rich default fields."""
-        kwargs = {"Status": status, "FieldGroups": field_groups}
+        kwargs: dict[str, Any] = {"Status": status, "FieldGroups": field_groups}
         if client_key:
             kwargs["ClientKey"] = client_key
         r = pf.orders.OrdersMe(**kwargs)
         return self._api.request(r)
 
-    def place_order(self, order_data: dict) -> dict:
-        """Place an order using a fully constructed order dictionary."""
-        r = tr.orders.Order(data=order_data)
-        return self._api.request(r)
-
-    def get_positions_query(self, client_key: Optional[str] = None, account_key: Optional[str] = None, field_groups: str = "PositionBase,PositionView,DisplayAndFormat,Greeks,UnderlyingDisplayAndFormat") -> dict:
+    def get_positions_query(
+        self,
+        client_key: Optional[str] = None,
+        account_key: Optional[str] = None,
+        field_groups: str = "PositionBase,PositionView,DisplayAndFormat,Greeks,UnderlyingDisplayAndFormat",
+    ) -> dict:
         """Query individual positions (not net positions) with rich fields."""
-        kwargs = {"FieldGroups": field_groups}
+        kwargs: dict[str, Any] = {"FieldGroups": field_groups}
         if client_key:
             kwargs["ClientKey"] = client_key
         if account_key:
@@ -155,14 +142,14 @@ class SaxoClient:
         r = pf.positions.PositionsQuery(params=kwargs)
         return self._api.request(r)
 
-    def place_order(self, order_data: dict) -> dict:
-        """Place an order using a fully constructed order dictionary."""
-        r = tr.orders.Order(data=order_data)
-        return self._api.request(r)
-
-    def get_all_open_orders(self, client_key: Optional[str] = None, account_key: Optional[str] = None, field_groups: str = "DisplayAndFormat,ExchangeInfo") -> dict:
+    def get_all_open_orders(
+        self,
+        client_key: Optional[str] = None,
+        account_key: Optional[str] = None,
+        field_groups: str = "DisplayAndFormat,ExchangeInfo",
+    ) -> dict:
         """Query all open orders across the account."""
-        kwargs = {"FieldGroups": field_groups}
+        kwargs: dict[str, Any] = {"FieldGroups": field_groups}
         if client_key:
             kwargs["ClientKey"] = client_key
         if account_key:
@@ -170,18 +157,19 @@ class SaxoClient:
         r = pf.orders.GetAllOpenOrders(params=kwargs)
         return self._api.request(r)
 
-    def place_order(self, order_data: dict) -> dict:
-        """Place an order using a fully constructed order dictionary."""
-        r = tr.orders.Order(data=order_data)
-        return self._api.request(r)
-
     # ---------------------------------------------------------
     # Market Data & Schedule
     # ---------------------------------------------------------
-    def get_instrument_details(self, asset_type: str, symbol: Optional[str] = None, uic: Optional[int] = None) -> dict:
+
+    def get_instrument_details(
+        self,
+        asset_type: str,
+        symbol: Optional[str] = None,
+        uic: Optional[int] = None,
+    ) -> dict:
         """Fetch detailed specifications (lot size, tick size, etc) for an instrument."""
         uic_resolved = self._resolve_uic(uic, symbol, asset_type)
-        
+
         cache_key = f"{uic_resolved}_{asset_type}"
         if cache_key in self._instrument_cache:
             return self._instrument_cache[cache_key]
@@ -192,64 +180,72 @@ class SaxoClient:
         self._instrument_cache[cache_key] = rv
         return rv
 
-    def get_market_schedule(self, asset_type: str, symbol: Optional[str] = None, uic: Optional[int] = None) -> dict:
+    def get_market_schedule(
+        self,
+        asset_type: str,
+        symbol: Optional[str] = None,
+        uic: Optional[int] = None,
+    ) -> dict:
         """Fetch trading sessions/schedule for the instrument."""
         uic_resolved = self._resolve_uic(uic, symbol, asset_type)
         r = rd.instruments.TradingSchedule(Uic=uic_resolved, AssetType=asset_type)
         return self._api.request(r)
 
-    def place_order(self, order_data: dict) -> dict:
-        """Place an order using a fully constructed order dictionary."""
-        r = tr.orders.Order(data=order_data)
-        return self._api.request(r)
-
-    def get_current_session_state(self, asset_type: str, symbol: Optional[str] = None, uic: Optional[int] = None) -> Optional[str]:
-        """
-        Get the raw state of the current trading session (e.g. 'AutomatedTrading', 'Closed').
-        Queries the Saxo TradingSchedule endpoint directly.
-        """
+    def get_current_session_state(
+        self,
+        asset_type: str,
+        symbol: Optional[str] = None,
+        uic: Optional[int] = None,
+    ) -> Optional[str]:
+        """Return current session state (e.g. AutomatedTrading, Closed)."""
         uic_resolved = self._resolve_uic(uic, symbol, asset_type)
-        
-        # Fetch schedule from the API
         schedule = self.get_market_schedule(asset_type=asset_type, uic=uic_resolved)
         sessions = schedule.get("Sessions", [])
-        
         if not sessions:
             return "Closed"
         return sessions[0].get("State", "Closed")
 
-    def is_order_accepted(self, asset_type: str, order_type: str, symbol: Optional[str] = None, uic: Optional[int] = None) -> bool:
-        """
-        Check if the specified order_type (e.g., 'Market', 'Limit') is currently accepted
-        by the exchange for this instrument.
-        """
+    def is_order_accepted(
+        self,
+        asset_type: str,
+        order_type: str,
+        symbol: Optional[str] = None,
+        uic: Optional[int] = None,
+    ) -> bool:
+        """True when the instrument session is AutomatedTrading."""
         uic_resolved = self._resolve_uic(uic, symbol, asset_type)
-        
-        # Check if state is AutomatedTrading
         state = self.get_current_session_state(asset_type=asset_type, uic=uic_resolved)
         return state == "AutomatedTrading"
 
-    def get_prices(self, asset_type: str, symbol: Optional[str] = None, uic: Optional[int] = None) -> dict:
+    def get_prices(
+        self,
+        asset_type: str,
+        symbol: Optional[str] = None,
+        uic: Optional[int] = None,
+    ) -> dict:
         """Get current Ask/Bid prices for the instrument."""
         uic_resolved = self._resolve_uic(uic, symbol, asset_type)
-        r = tr.infoprices.InfoPrices(Uic=uic_resolved, AssetType=asset_type)
+        r = tr.infoprices.InfoPrice(params={"Uic": uic_resolved, "AssetType": asset_type})
         return self._api.request(r)
 
-    def place_order(self, order_data: dict) -> dict:
-        """Place an order using a fully constructed order dictionary."""
-        r = tr.orders.Order(data=order_data)
+    def get_price_quotes(self, uics: list[int], asset_type: str = "Stock") -> dict:
+        """Get snapshot of current prices (Quote field group)."""
+        uic_str = ",".join(map(str, uics))
+        params = {"Uics": uic_str, "FieldGroups": "Quote", "AssetType": asset_type}
+        r = tr.infoprices.InfoPrices(params=params)
         return self._api.request(r)
 
     # ---------------------------------------------------------
     # Order Execution (Write Operations)
     # ---------------------------------------------------------
+
     def market_order(
         self,
         asset_type: str,
         amount: int | float,
         symbol: Optional[str] = None,
         uic: Optional[int] = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> dict:
         """Place a Market Order."""
         uic_resolved = self._resolve_uic(uic, symbol, asset_type)
@@ -263,11 +259,17 @@ class SaxoClient:
         order_price: float,
         symbol: Optional[str] = None,
         uic: Optional[int] = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> dict:
         """Place a Limit Order."""
         uic_resolved = self._resolve_uic(uic, symbol, asset_type)
-        order = LimitOrder(Uic=uic_resolved, Amount=amount, OrderPrice=order_price, AssetType=asset_type, **kwargs)
+        order = LimitOrder(
+            Uic=uic_resolved,
+            Amount=amount,
+            OrderPrice=order_price,
+            AssetType=asset_type,
+            **kwargs,
+        )
         return self._execute_order(order)
 
     def stop_order(
@@ -277,9 +279,9 @@ class SaxoClient:
         order_price: float,
         symbol: Optional[str] = None,
         uic: Optional[int] = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> dict:
-        """Place a Stop Order with Smart Routing."""
+        """Place a Stop Order with smart routing (Stop vs StopIfTraded)."""
         uic_resolved = self._resolve_uic(uic, symbol, asset_type)
         details = self.get_instrument_details(asset_type=asset_type, uic=uic_resolved)
         supported_types = details.get("SupportedOrderTypes", [])
@@ -287,7 +289,13 @@ class SaxoClient:
         if "Stop" in supported_types:
             order = StopOrder(Uic=uic_resolved, Amount=amount, OrderPrice=order_price, AssetType=asset_type, **kwargs)
         elif "StopIfTraded" in supported_types:
-            order = StopIfTradedOrder(Uic=uic_resolved, Amount=amount, OrderPrice=order_price, AssetType=asset_type, **kwargs)
+            order = StopIfTradedOrder(
+                Uic=uic_resolved,
+                Amount=amount,
+                OrderPrice=order_price,
+                AssetType=asset_type,
+                **kwargs,
+            )
         else:
             order = StopOrder(Uic=uic_resolved, Amount=amount, OrderPrice=order_price, AssetType=asset_type, **kwargs)
 
@@ -301,7 +309,7 @@ class SaxoClient:
         stop_limit_price: float,
         symbol: Optional[str] = None,
         uic: Optional[int] = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> dict:
         """Place a Stop Limit Order."""
         uic_resolved = self._resolve_uic(uic, symbol, asset_type)
@@ -315,39 +323,57 @@ class SaxoClient:
         )
         return self._execute_order(order)
 
+    def stop_if_traded_order(
+        self,
+        asset_type: str,
+        amount: int | float,
+        order_price: float,
+        symbol: Optional[str] = None,
+        uic: Optional[int] = None,
+        **kwargs: Any,
+    ) -> dict:
+        """Place an explicit StopIfTraded Order."""
+        uic_resolved = self._resolve_uic(uic, symbol, asset_type)
+        order = StopIfTradedOrder(
+            Uic=uic_resolved,
+            Amount=amount,
+            OrderPrice=order_price,
+            AssetType=asset_type,
+            **kwargs,
+        )
+        return self._execute_order(order)
+
     def validate_order(self, order_spec: dict[str, Any] | Any) -> dict:
         """Precheck an order without placing it (PrecheckOrder endpoint)."""
         return self._execute_order(order_spec, validate_only=True)
 
     def cancel_order(self, order_id: str) -> dict:
         """Cancel an active order by ID."""
-        r = tr.orders.CancelOrder(OrderId=order_id)
-        return self._api.request(r)
-
-    def place_order(self, order_data: dict) -> dict:
-        """Place an order using a fully constructed order dictionary."""
-        r = tr.orders.Order(data=order_data)
+        r = tr.orders.CancelOrders(OrderIds=str(order_id), params={"AccountKey": self.account_key})
         return self._api.request(r)
 
     # ---------------------------------------------------------
     # Streaming & Subscriptions
     # ---------------------------------------------------------
-    def add_price_subscription(self, context_id: str, reference_id: str, uic: int, asset_type: str, arguments: Optional[dict] = None) -> dict:
+
+    def add_price_subscription(
+        self,
+        context_id: str,
+        reference_id: str,
+        uic: int,
+        asset_type: str,
+        arguments: Optional[dict] = None,
+    ) -> dict:
         """Create a new price subscription."""
         if arguments is None:
             arguments = {"Uic": uic, "AssetType": asset_type}
-        
+
         data = {
             "ContextId": context_id,
             "ReferenceId": reference_id,
-            "Arguments": arguments
+            "Arguments": arguments,
         }
         r = tr.prices.CreatePriceSubscription(data=data)
-        return self._api.request(r)
-
-    def place_order(self, order_data: dict) -> dict:
-        """Place an order using a fully constructed order dictionary."""
-        r = tr.orders.Order(data=order_data)
         return self._api.request(r)
 
     def remove_price_subscription(self, context_id: str, reference_id: str) -> dict:
@@ -355,31 +381,9 @@ class SaxoClient:
         r = tr.prices.PriceSubscriptionRemove(ContextId=context_id, ReferenceId=reference_id)
         return self._api.request(r)
 
-    def place_order(self, order_data: dict) -> dict:
-        """Place an order using a fully constructed order dictionary."""
-        r = tr.orders.Order(data=order_data)
-        return self._api.request(r)
-
     def remove_all_subscriptions(self, context_id: str) -> dict:
         """Remove all active subscriptions for a context."""
         from saxo_api_client.endpoints.rootservices.subscriptions import RemoveMultipleActiveSubscriptions
+
         r = RemoveMultipleActiveSubscriptions(ContextId=context_id, params={})
         return self._api.request(r)
-
-    def place_order(self, order_data: dict) -> dict:
-        """Place an order using a fully constructed order dictionary."""
-        r = tr.orders.Order(data=order_data)
-        return self._api.request(r)
-
-    def get_price_quotes(self, uics: list[int], asset_type: str = "Stock") -> dict:
-        """Get snapshot of current prices (Quote field group)."""
-        uic_str = ",".join(map(str, uics))
-        params = {"Uics": uic_str, "FieldGroups": "Quote", "AssetType": asset_type}
-        r = tr.infoprices.InfoPrices(params=params)
-        return self._api.request(r)
-
-    def place_order(self, order_data: dict) -> dict:
-        """Place an order using a fully constructed order dictionary."""
-        r = tr.orders.Order(data=order_data)
-        return self._api.request(r)
-

@@ -209,12 +209,13 @@ AIアシスタントは、必要に応じて以下のファイルを参照し、
 今回の AI-First 移行において、ドキュメントの分離だけでなく、**「SaxoBank API 特有の複雑さ（Uic解決、AccountKey注入など）」を完全に隠蔽する3層アーキテクチャ** が確立されました。
 
 ### 1. Layer 3 (High-Level API - 推奨)
-- **代表クラス**: `SaxoTrader`, `OptionTrader` (`saxo_api_client.contrib.trader` など)
+- **代表クラス**: `SaxoClient`, `OptionTrader` (`saxo_api_client.contrib.client` / `option_trader`)
 - **役割**: 人間（およびAIアシスタント）が最も直感的に使える最上位APIです。
 - **特徴**:
-  - `market_order(Symbol="AAPL", AssetType="Stock")` のように、**ティッカーシンボル**での注文が可能です。
+  - `SaxoClient.market_order(symbol="AAPL", asset_type="Stock", amount=10)` のように、**ティッカーシンボル**での注文が可能です。
   - 裏側で `PrimaryListing` を用いた安全なUIC自動解決ロジックが走り、Saxo特有の「複数取引所ヒット問題」を自動回避します。
   - `AccountKey` の自動注入や、複雑なオーダー辞書の構築をすべて隠蔽します。
+- **破壊的変更**: 旧 `SaxoTrader`（`contrib.trader`）は削除済みです。互換 shim はありません。`SaxoClient` に移行してください。
 
 ### 2. Layer 2 (Order Builders)
 - **代表クラス**: `MarketOrder`, `LimitOrder`, `StopOrder` (`saxo_api_client.contrib.orders` など)
@@ -223,13 +224,13 @@ AIアシスタントは、必要に応じて以下のファイルを参照し、
   - 手動でパラメータを組み立てたい場合や、特定のアルゴリズムトレードで細かい制御が必要な場合に使用します。
 
 ### 3. Layer 1 (OpenAPI FlexModels)
-- **代表クラス**: `TradeOrdersRequest` 等 (`saxo_api_client.models` 法下の自動生成 Pydantic モデル)
+- **代表クラス**: `TradeOrdersRequest` 等 (`saxo_api_client.models` 配下の自動生成 Pydantic モデル)
 - **役割**: API送信直前に自動介入して、Saxoの厳格なJSONスキーマに基づくバリデーションとシリアライズを行うインフラストラクチャ層です。
 - **特徴**:
   - すべてのモデルは `_FlexModel` (`extra='allow'`) を継承しており、Saxo側での将来のAPI変更（新フィールド追加など）でクラッシュしない堅牢な設計（AI-First Resilience）となっています。
   - 人間が直接インスタンス化して使うことはほぼありません。
 
-この3層構造により、「**基本は Layer 3 (`SaxoTrader`) を使い、必要に応じて Layer 2/1 に降りる**」という明確なベストプラクティスが生まれました。
+この3層構造により、「**基本は Layer 3 (`SaxoClient` / `OptionTrader`) を使い、必要に応じて Layer 2/1 に降りる**」という明確なベストプラクティスが生まれました。
 
 ### パラメータ
 なし

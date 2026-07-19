@@ -122,14 +122,16 @@ client = API(access_token=token, trace_dir="api_traces")  # Can also be enabled 
 
 To shield developers from the complexity of Saxo Bank's APIs (such as mandatory `AccountKey` injection and resolving Tickers to numeric `Uic`s), this library provides a robust 3-Tier Architecture.
 
-- **Layer 3 (High-Level API - Recommended)**: `SaxoTrader`, `OptionTrader`
-  - The primary interface for trading. Provides intuitive methods like `market_order(Symbol="AAPL", AssetType="Stock")`.
-  - Automatically resolves Tickers (Symbol) to `Uic` (including smart fallback via `PrimaryListing` for multiple hits).
-  - Automatically injects the `AccountKey` and constructs the necessary nested order parameters.
+- **Layer 3 (High-Level API - Recommended)**: `SaxoClient`, `OptionTrader`
+  - Primary facade for trading. Prefer `SaxoClient` for FX / Stock / CFD (`market_order`, `limit_order`, `stop_order`, …) and `OptionTrader` for options.
+  - Resolves tickers (Symbol) to `Uic` (including `PrimaryListing` fallback when multiple hits occur).
+  - Injects `AccountKey` and builds nested order parameters. (`SaxoTrader` was removed; do not import it.)
 - **Layer 2 (Order Builders)**: `MarketOrder`, `LimitOrder`, `StopOrder`, etc.
-  - Used for advanced customization. These helpers allow you to build complex order structures manually when Layer 3 doesn't cover your specific edge case.
+  - Used for advanced customization when Layer 3 does not cover an edge case (or with `SaxoClient.validate_order` / `place_order`).
 - **Layer 1 (OpenAPI FlexModels)**: Pydantic `_FlexModel` (`TradeOrdersRequest`, etc.)
-  - The infrastructure layer. Enforces strict OpenAPI JSON validation before requests are sent to Saxo. Developers rarely interact with this layer directly.
+  - Schema validation before requests are sent. Developers rarely interact with this layer directly.
+- **Layer 0 (Transport)**: `API`, `SaxoAuthClient`, `endpoints.*`
+  - Raw HTTP / OAuth Command-pattern clients.
 
 ---
 
@@ -165,7 +167,7 @@ The streaming features in this library (Saxo-OpenAPI) are currently under active
 - `docs/api/`: **[Main]** Japanese documentation for all endpoints.
 - `docs/schemas/`: Over 270 JSON Schemas representing requests and responses.
 - `docs/examples/`: Practical workflow examples (balance check, order execution, streaming, etc.).
-- `saxo_api_client/contrib/`: Helper classes to simplify order construction (`SaxoTrader`, etc.).
+- `saxo_api_client/contrib/`: High-level facades (`SaxoClient`, `OptionTrader`) and order builders.
 - `samples/`: **[New]** Example scripts to verify operations in real/SIM environments (FX, options, order lifecycles).
 - `tests/`: Unit and integration tests for the library.
 - `.ai/`: Structured index and metrics metadata for AI assistants.

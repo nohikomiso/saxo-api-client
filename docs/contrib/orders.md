@@ -222,6 +222,6 @@ print(json.dumps(rv, indent=2))
 
 ## 関連ドキュメント
 
-- [trader.md](trader.md) - SaxoTrader ヘルパー（FX/Stock/CFD取引の高レベルAPI）
+- [client.md](client.md) - SaxoClient ヘルパー（FX/Stock/CFD取引の高レベルAPI）
 - [option_trader.md](option_trader.md) - オプション取引用ヘルパー（OptionTrader & OptionFinder）
 - [Trading API](../api/trading/README.md) - Trading エンドポイント

@@ -53,7 +53,8 @@ docs/
 │
 ├── contrib/               # Contrib モジュールドキュメント
 │   ├── orders.md          # 注文ヘルパークラス
-│   ├── trader.md          # SaxoTrader (FX/Stock/CFD)
+│   ├── client.md          # SaxoClient (FX/Stock/CFD)
+│   ├── trader.md          # 廃止案内（→ client.md）
 │   ├── option_trader.md   # OptionTrader & OptionFinder
 │   ├── websocket.md       # WebSocket streaming
 │   └── utilities.md       # ユーティリティ関数

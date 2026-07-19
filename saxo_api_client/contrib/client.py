@@ -293,6 +293,32 @@ class SaxoClient:
 
         return self._execute_order(order)
 
+    def stop_limit_order(
+        self,
+        asset_type: str,
+        amount: int | float,
+        order_price: float,
+        stop_limit_price: float,
+        symbol: Optional[str] = None,
+        uic: Optional[int] = None,
+        **kwargs,
+    ) -> dict:
+        """Place a Stop Limit Order."""
+        uic_resolved = self._resolve_uic(uic, symbol, asset_type)
+        order = StopLimitOrder(
+            Uic=uic_resolved,
+            Amount=amount,
+            OrderPrice=order_price,
+            StopLimitPrice=stop_limit_price,
+            AssetType=asset_type,
+            **kwargs,
+        )
+        return self._execute_order(order)
+
+    def validate_order(self, order_spec: dict[str, Any] | Any) -> dict:
+        """Precheck an order without placing it (PrecheckOrder endpoint)."""
+        return self._execute_order(order_spec, validate_only=True)
+
     def cancel_order(self, order_id: str) -> dict:
         """Cancel an active order by ID."""
         r = tr.orders.CancelOrder(OrderId=order_id)

@@ -8,8 +8,9 @@ from .mixin import OnFillHnd
 
 
 class MarketOrder(BaseOrder, OnFillHnd):
-    """create a MarketOrder.
+    """Low-level market body. Prefer PositionOpen.market for new positions.
 
+    Do NOT use this class to close ForceOpen positions — use PositionClose.
     MarketOrder is used to build the body for a MarketOrder. The body can be
     used to pass to the Order endpoint.
     """

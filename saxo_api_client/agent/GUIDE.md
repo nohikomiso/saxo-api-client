@@ -24,20 +24,56 @@ Repo docs (clone only): `docs/contrib/client.md`, `docs/MIGRATION.md`.
 | Auth / OAuth | `from saxo_api_client.auth import SaxoAuthClient` |
 | Raw REST | `from saxo_api_client import API` + `saxo_api_client.endpoints.*` |
 
-**Removed:** `saxo_api_client.contrib.trader.SaxoTrader` — no shim. Always use `SaxoClient`.
+**Removed:** `saxo_api_client.contrib.trader.SaxoTrader` — no shim. Always use `SaxoClient`.  
+**Removed:** `MarketCloseOrder` — use `PositionClose.force_open_*`.
 
 ---
 
 ## Architecture (do not flatten)
 
 1. **Layer 3 — Facades (preferred):** `SaxoClient`, `OptionTrader`  
-   AccountKey injection, Symbol→Uic resolution, order one-liners, `validate_order` (precheck).
-2. **Layer 2 — Order builders:** `MarketOrder`, `LimitOrder`, `StopOrder`, `StopLimitOrder`, …  
-   Build bodies; pass to `SaxoClient.validate_order` / `place_order`.
+   Prefer intent methods: `open_*` / `close_fifo_*` / `close_force_open_*` / `flatten_force_open`.
+2. **Layer 2 — Intent builders:** `PositionOpen`, `PositionClose`  
+   Low-level: `MarketOrder`, `LimitOrder`, `StopOrder` (open-only; never FO close).
 3. **Layer 1 — FlexModels:** Pydantic OpenAPI models (usually automatic).
 4. **Layer 0 — Transport:** `API`, `endpoints.*`, `SaxoAuthClient`.
 
 Rule: start at Layer 3; drop to Layer 2/0 only for uncovered edge cases.
+
+---
+
+## Open vs close (anti-hallucination)
+
+Before coding, answer these four questions:
+
+1. Open or close? → `PositionOpen` / `PositionClose` (or `client.open_*` / `client.close_*`)
+2. If close: FIFO or ForceOpen? → `fifo_*` / `force_open_*`
+3. Market / limit / stop?
+4. If ForceOpen close: get `position_id` from `client.iter_open_positions` (top-level PositionsQuery id). No id → do not close.
+
+| Intent | API |
+|--------|-----|
+| New limit/stop | `PositionOpen.limit` / `.stop` (`is_force_open` required) |
+| FIFO close limit/stop | `PositionClose.fifo_limit` / `.fifo_stop` |
+| FO close limit/stop | `PositionClose.force_open_limit` / `.force_open_stop` (`position_id` required) |
+
+**Forbidden**
+
+- Closing ForceOpen with standalone `StopOrder` / `LimitOrder` / `MarketOrder` (opens opposite leg = fake close)
+- Using `PositionClose` to open a new position
+- A single ambiguous `close_position()` that guesses FIFO vs FO
+
+```python
+# BAD — FO long “close” via standalone stop (actually opens short)
+StopOrder(Uic=42, Amount=-10000, OrderPrice=entry, IsForceOpen=False, ...)
+
+# GOOD
+from saxo_api_client.contrib.orders import PositionClose
+PositionClose.force_open_stop(
+    position_id=pid, uic=42, amount=10000, asset_type="FxSpot",
+    buy_sell="Sell", order_price=entry,
+)
+```
 
 ---
 
@@ -48,15 +84,20 @@ from saxo_api_client.contrib.client import SaxoClient
 
 client = SaxoClient(access_token="...")  # or auth_client=SaxoAuthClient(...)
 
-# amount > 0 Buy, amount < 0 Sell
-client.market_order(asset_type="FxSpot", uic=21, amount=10000)
-client.limit_order(asset_type="FxSpot", uic=21, amount=10000, order_price=1.10)
-client.stop_order(asset_type="FxSpot", uic=21, amount=-10000, order_price=1.09)
-client.stop_limit_order(
-    asset_type="CfdOnStock", uic=211, amount=-1,
-    order_price=150.0, stop_limit_price=149.5,
+# Preferred: intent-named open/close
+client.open_market(
+    asset_type="FxSpot", uic=42, amount=10000, buy_sell="Buy", is_force_open=True,
 )
-client.validate_order(order_builder_instance)  # PrecheckOrder, no fill
+rows = client.iter_open_positions(uic=42)
+pid = rows[0]["position_id"]
+client.close_force_open_market(
+    position_id=pid, asset_type="FxSpot", uic=42, amount=10000, buy_sell="Sell",
+)
+client.flatten_force_open(asset_type="FxSpot", uic=42)
+
+# Legacy one-liners (low-level; amount sign = side). Prefer open_*/close_* for FO.
+client.market_order(asset_type="FxSpot", uic=21, amount=10000, IsForceOpen=False)
+client.validate_order(order_builder_instance)
 client.cancel_order(order_id)
 ```
 
@@ -70,6 +111,7 @@ Keyword style: `asset_type` first; resolve with `symbol=` and/or `uic=`.
 
 - Prefer **simulation** tokens and `validate_order` before live placement.
 - Rate limits: SessionOrders is strict; space order calls (~1s).
+- ForceOpen close requires **PositionId + nested Orders** — never standalone opposite stop/limit.
 - Do not invent undocumented fields; prefer Layer 3 methods.
 - Streaming helpers are incomplete — do not rely on them for production market data.
 - Wheel does **not** ship full `docs/` or `.ai/`; this GUIDE + README are the installed agent sources. Clone the repo for full docs.
@@ -80,7 +122,7 @@ Keyword style: `asset_type` first; resolve with `symbol=` and/or `uic=`.
 
 1. **MCP (preferred for agents):** PyPI `mcp-server-saxo-openapi` — endpoint search, nested specs, `saxo://docs/pitfalls.md`. Not a trading client.
 2. README 3-tier section and this GUIDE  
-3. `docs/contrib/client.md` / `option_trader.md` (clone)  
+3. `docs/contrib/client.md` / `orders.md` / `option_trader.md` (clone)  
 4. Human browsing: [SaxoBank OpenAPI Docs Markdown](https://github.com/nohikomiso/SaxoBank-OpenAPI-Docs) or [official reference](https://www.developer.saxo/openapi/referencedocs)
 
-Do **not** treat removed `SaxoTrader` docs/samples as current API.
+Do **not** treat removed `SaxoTrader` / `MarketCloseOrder` docs/samples as current API.

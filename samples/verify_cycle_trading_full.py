@@ -83,28 +83,17 @@ def main() -> None:
         # 4. Close Position: Place a Market Close order (Exclusive Close)
         logger.info(f"Step 4: Closing position {position_id} (Market Close Order)...")
 
-        # Use the new utility class MarketCloseOrder
-        # This handles the complex structure of explicit position closure
-        # (PositionId at top level + nested Orders list)
+        # Explicit ForceOpen / per-leg close: PositionId + nested Orders
+        from saxo_api_client.contrib.orders import PositionClose
 
-        # NOTE: In a real application, you should check Netting Mode here.
-        # if netting_mode == 'FifoEndOfDay': use MarketCloseOrder (Exclusive Close)
-        # if netting_mode == 'FifoRealTime': usage depends on API version/config
-
-        from saxo_api_client.contrib.orders import MarketCloseOrder
-
-        close_order = MarketCloseOrder(
-            PositionId=position_id,
-            Uic=42,
-            Amount=10000,
-            AssetType="FxSpot",
-            BuySell="Sell",  # Explicitly selling to close Long
-            OrderType="Market",
-            ManualOrder=True,
+        close_order = PositionClose.force_open_market(
+            position_id=position_id,
+            uic=42,
+            amount=10000,
+            asset_type="FxSpot",
+            buy_sell="Sell",
+            manual_order=True,
         )
-
-        # Inject AccountKey - tie_account_to_order handles the logic correctly for MarketCloseOrder
-        # (injecting into nested Orders list instead of top level)
         close_order_data = tie_account_to_order(account_key, close_order)
 
         logger.info(f"Close Order Data (Utility): {json.dumps(close_order_data, indent=2)}")

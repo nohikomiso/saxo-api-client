@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.2.0 — 2026-07-20
+
+### Breaking
+
+- Removed `MarketCloseOrder`. Use `PositionClose.force_open_market` / `force_open_limit` /
+  `force_open_stop` (or `SaxoClient.close_force_open_*`).
+
+### Added
+
+- `PositionOpen` — open-only factories (`market` / `limit` / `stop` / `stop_limit`) with
+  mandatory `is_force_open`.
+- `PositionClose` — close-only factories (`fifo_*` / `force_open_*` / `clear_force_open_market`).
+- `SaxoClient`: `iter_open_positions`, `open_*`, `close_fifo_*`, `close_force_open_*`,
+  `flatten_force_open`.
+- Agent GUIDE / orders.md purpose decision table (open vs close, FIFO vs ForceOpen).
+- MCP pitfalls section on ForceOpen fake flatten.
+
+### Changed
+
+- Low-level `MarketOrder` / `LimitOrder` / `StopOrder` docstrings: prefer PositionOpen;
+  forbid using them to close ForceOpen legs.
+
 ## 1.1.0 — 2026-07-19
 
 ### Added

@@ -10,6 +10,8 @@ from saxo_api_client.auth.client import SaxoAuthClient
 from saxo_api_client.contrib.orders import (
     LimitOrder,
     MarketOrder,
+    PositionClose,
+    PositionOpen,
     StopIfTradedOrder,
     StopLimitOrder,
     StopOrder,
@@ -351,6 +353,353 @@ class SaxoClient:
         """Cancel an active order by ID."""
         r = tr.orders.CancelOrders(OrderIds=str(order_id), params={"AccountKey": self.account_key})
         return self._api.request(r)
+
+    # ---------------------------------------------------------
+    # Position open / close (intent-named; prefer over market_order for FO)
+    # ---------------------------------------------------------
+
+    def iter_open_positions(
+        self,
+        *,
+        uic: Optional[int] = None,
+        asset_type: Optional[str] = None,
+        client_key: Optional[str] = None,
+        account_key: Optional[str] = None,
+        field_groups: str = "PositionBase,PositionView,DisplayAndFormat",
+    ) -> list[dict[str, Any]]:
+        """Return normalized open legs from PositionsQuery.
+
+        ``position_id`` is taken from the top-level PositionsQuery item (not
+        only PositionBase), matching Saxo SIM responses.
+        """
+        body = self.get_positions_query(
+            client_key=client_key,
+            account_key=account_key or self.account_key,
+            field_groups=field_groups,
+        )
+        rows: list[dict[str, Any]] = []
+        for item in body.get("Data") or []:
+            base = item.get("PositionBase") or {}
+            view = item.get("PositionView") or {}
+            item_uic = base.get("Uic")
+            item_asset = base.get("AssetType")
+            if uic is not None and int(item_uic or -1) != int(uic):
+                continue
+            if asset_type is not None and item_asset != asset_type:
+                continue
+            position_id = item.get("PositionId") or base.get("PositionId")
+            amount = float(base.get("Amount") or 0)
+            rows.append(
+                {
+                    "position_id": str(position_id) if position_id is not None else None,
+                    "uic": int(item_uic) if item_uic is not None else None,
+                    "asset_type": item_asset,
+                    "amount": amount,
+                    "buy_sell": OD.Direction.Buy if amount > 0 else OD.Direction.Sell,
+                    "is_force_open": bool(base.get("IsForceOpen")),
+                    "open_price": base.get("OpenPrice"),
+                    "status": base.get("Status"),
+                    "external_reference": base.get("ExternalReference"),
+                    "profit_loss": view.get("ProfitLossOnTrade"),
+                    "current_price": view.get("CurrentPrice"),
+                    "raw": item,
+                }
+            )
+        return rows
+
+    def _require_force_open_position(self, position_id: str) -> dict[str, Any]:
+        for row in self.iter_open_positions():
+            if row.get("position_id") == str(position_id):
+                if not row.get("is_force_open"):
+                    raise ValueError(
+                        f"position_id={position_id} is not ForceOpen; "
+                        "use close_fifo_* for FIFO/netting closes"
+                    )
+                return row
+        raise ValueError(f"position_id={position_id} not found among open positions")
+
+    def open_market(
+        self,
+        *,
+        asset_type: str,
+        amount: int | float,
+        buy_sell: str,
+        is_force_open: bool,
+        symbol: Optional[str] = None,
+        uic: Optional[int] = None,
+        **kwargs: Any,
+    ) -> dict:
+        """Open a new position (market). ``is_force_open`` is required."""
+        uic_resolved = self._resolve_uic(uic, symbol, asset_type)
+        order = PositionOpen.market(
+            uic=uic_resolved,
+            amount=amount,
+            asset_type=asset_type,
+            buy_sell=buy_sell,
+            is_force_open=is_force_open,
+            **kwargs,
+        )
+        return self._execute_order(order)
+
+    def open_limit(
+        self,
+        *,
+        asset_type: str,
+        amount: int | float,
+        buy_sell: str,
+        order_price: float,
+        is_force_open: bool,
+        symbol: Optional[str] = None,
+        uic: Optional[int] = None,
+        **kwargs: Any,
+    ) -> dict:
+        """Open a new position (limit)."""
+        uic_resolved = self._resolve_uic(uic, symbol, asset_type)
+        order = PositionOpen.limit(
+            uic=uic_resolved,
+            amount=amount,
+            asset_type=asset_type,
+            buy_sell=buy_sell,
+            order_price=order_price,
+            is_force_open=is_force_open,
+            **kwargs,
+        )
+        return self._execute_order(order)
+
+    def open_stop(
+        self,
+        *,
+        asset_type: str,
+        amount: int | float,
+        buy_sell: str,
+        order_price: float,
+        is_force_open: bool,
+        symbol: Optional[str] = None,
+        uic: Optional[int] = None,
+        **kwargs: Any,
+    ) -> dict:
+        """Open a new position (stop). Not a close."""
+        uic_resolved = self._resolve_uic(uic, symbol, asset_type)
+        order = PositionOpen.stop(
+            uic=uic_resolved,
+            amount=amount,
+            asset_type=asset_type,
+            buy_sell=buy_sell,
+            order_price=order_price,
+            is_force_open=is_force_open,
+            **kwargs,
+        )
+        return self._execute_order(order)
+
+    def open_stop_limit(
+        self,
+        *,
+        asset_type: str,
+        amount: int | float,
+        buy_sell: str,
+        order_price: float,
+        stop_limit_price: float,
+        is_force_open: bool,
+        symbol: Optional[str] = None,
+        uic: Optional[int] = None,
+        **kwargs: Any,
+    ) -> dict:
+        """Open a new position (stop-limit)."""
+        uic_resolved = self._resolve_uic(uic, symbol, asset_type)
+        order = PositionOpen.stop_limit(
+            uic=uic_resolved,
+            amount=amount,
+            asset_type=asset_type,
+            buy_sell=buy_sell,
+            order_price=order_price,
+            stop_limit_price=stop_limit_price,
+            is_force_open=is_force_open,
+            **kwargs,
+        )
+        return self._execute_order(order)
+
+    def close_fifo_market(
+        self,
+        *,
+        asset_type: str,
+        amount: int | float,
+        buy_sell: str,
+        symbol: Optional[str] = None,
+        uic: Optional[int] = None,
+        **kwargs: Any,
+    ) -> dict:
+        """FIFO/netting close via opposite market (no PositionId)."""
+        uic_resolved = self._resolve_uic(uic, symbol, asset_type)
+        order = PositionClose.fifo_market(
+            uic=uic_resolved,
+            amount=amount,
+            asset_type=asset_type,
+            buy_sell=buy_sell,
+            **kwargs,
+        )
+        return self._execute_order(order)
+
+    def close_fifo_limit(
+        self,
+        *,
+        asset_type: str,
+        amount: int | float,
+        buy_sell: str,
+        order_price: float,
+        symbol: Optional[str] = None,
+        uic: Optional[int] = None,
+        **kwargs: Any,
+    ) -> dict:
+        """FIFO/netting close via opposite limit."""
+        uic_resolved = self._resolve_uic(uic, symbol, asset_type)
+        order = PositionClose.fifo_limit(
+            uic=uic_resolved,
+            amount=amount,
+            asset_type=asset_type,
+            buy_sell=buy_sell,
+            order_price=order_price,
+            **kwargs,
+        )
+        return self._execute_order(order)
+
+    def close_fifo_stop(
+        self,
+        *,
+        asset_type: str,
+        amount: int | float,
+        buy_sell: str,
+        order_price: float,
+        symbol: Optional[str] = None,
+        uic: Optional[int] = None,
+        **kwargs: Any,
+    ) -> dict:
+        """FIFO/netting close via opposite stop."""
+        uic_resolved = self._resolve_uic(uic, symbol, asset_type)
+        order = PositionClose.fifo_stop(
+            uic=uic_resolved,
+            amount=amount,
+            asset_type=asset_type,
+            buy_sell=buy_sell,
+            order_price=order_price,
+            **kwargs,
+        )
+        return self._execute_order(order)
+
+    def close_force_open_market(
+        self,
+        *,
+        position_id: str,
+        asset_type: str,
+        amount: int | float,
+        buy_sell: str,
+        symbol: Optional[str] = None,
+        uic: Optional[int] = None,
+        verify_position: bool = True,
+        **kwargs: Any,
+    ) -> dict:
+        """ForceOpen explicit market close (PositionId + nested Orders)."""
+        if verify_position:
+            self._require_force_open_position(position_id)
+        uic_resolved = self._resolve_uic(uic, symbol, asset_type)
+        order = PositionClose.force_open_market(
+            position_id=position_id,
+            uic=uic_resolved,
+            amount=amount,
+            asset_type=asset_type,
+            buy_sell=buy_sell,
+            **kwargs,
+        )
+        return self._execute_order(order)
+
+    def close_force_open_limit(
+        self,
+        *,
+        position_id: str,
+        asset_type: str,
+        amount: int | float,
+        buy_sell: str,
+        order_price: float,
+        symbol: Optional[str] = None,
+        uic: Optional[int] = None,
+        verify_position: bool = True,
+        **kwargs: Any,
+    ) -> dict:
+        """ForceOpen explicit limit close."""
+        if verify_position:
+            self._require_force_open_position(position_id)
+        uic_resolved = self._resolve_uic(uic, symbol, asset_type)
+        order = PositionClose.force_open_limit(
+            position_id=position_id,
+            uic=uic_resolved,
+            amount=amount,
+            asset_type=asset_type,
+            buy_sell=buy_sell,
+            order_price=order_price,
+            **kwargs,
+        )
+        return self._execute_order(order)
+
+    def close_force_open_stop(
+        self,
+        *,
+        position_id: str,
+        asset_type: str,
+        amount: int | float,
+        buy_sell: str,
+        order_price: float,
+        symbol: Optional[str] = None,
+        uic: Optional[int] = None,
+        verify_position: bool = True,
+        **kwargs: Any,
+    ) -> dict:
+        """ForceOpen explicit stop close (requires correct market side)."""
+        if verify_position:
+            self._require_force_open_position(position_id)
+        uic_resolved = self._resolve_uic(uic, symbol, asset_type)
+        order = PositionClose.force_open_stop(
+            position_id=position_id,
+            uic=uic_resolved,
+            amount=amount,
+            asset_type=asset_type,
+            buy_sell=buy_sell,
+            order_price=order_price,
+            **kwargs,
+        )
+        return self._execute_order(order)
+
+    def flatten_force_open(
+        self,
+        *,
+        asset_type: str,
+        symbol: Optional[str] = None,
+        uic: Optional[int] = None,
+        external_reference: Optional[str] = None,
+    ) -> dict[str, Any]:
+        """Flatten net exposure for a UIC with ClearForceOpen market."""
+        uic_resolved = self._resolve_uic(uic, symbol, asset_type)
+        net = 0.0
+        for row in self.iter_open_positions(uic=uic_resolved, asset_type=asset_type):
+            net += float(row.get("amount") or 0)
+        if abs(net) < 1e-9:
+            return {"ok": True, "skipped": True, "net": 0.0}
+        flatten_amt = -net
+        buy_sell = OD.Direction.Buy if flatten_amt > 0 else OD.Direction.Sell
+        order = PositionClose.clear_force_open_market(
+            uic=uic_resolved,
+            amount=abs(flatten_amt),
+            asset_type=asset_type,
+            buy_sell=buy_sell,
+            external_reference=external_reference,
+        )
+        resp = self._execute_order(order)
+        return {
+            "ok": True,
+            "skipped": False,
+            "net_before": net,
+            "buy_sell": buy_sell,
+            "order_id": str(resp.get("OrderId") or ""),
+            "raw": resp,
+        }
 
     # ---------------------------------------------------------
     # Streaming & Subscriptions

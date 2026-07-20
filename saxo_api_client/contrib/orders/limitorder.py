@@ -9,10 +9,11 @@ from .mixin import OnFillHnd
 
 
 class LimitOrder(BaseOrder, OnFillHnd):
-    """create a LimitOrder.
+    """Low-level limit body. Prefer PositionOpen.limit for new positions.
 
-    LimitOrder is used to build the body for a LimitOrder. The body can be
-    used to pass to the Order endpoint.
+    Do NOT use this class to close positions — use PositionClose.fifo_limit or
+    PositionClose.force_open_limit. Closing ForceOpen with a standalone Limit
+    opens a new opposite leg instead of closing.
     """
 
     # allowed OrderDurationTypes:

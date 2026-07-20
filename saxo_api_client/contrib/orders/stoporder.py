@@ -9,10 +9,11 @@ from .mixin import OnFillHnd
 
 
 class StopOrder(BaseOrder, OnFillHnd):
-    """create a StopOrder.
+    """Low-level stop body. Prefer PositionOpen.stop for new positions.
 
-    StopOrder is used to build the body for a StopOrder. The body can be
-    used to pass to the Order endpoint.
+    Do NOT use this class to close ForceOpen positions — use
+    PositionClose.force_open_stop. A standalone opposite Stop opens a new
+    short/long instead of closing the FO leg.
     """
 
     # allowed OrderDurationTypes:

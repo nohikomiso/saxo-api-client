@@ -212,16 +212,19 @@ AIアシスタントは、必要に応じて以下のファイルを参照し、
 - **代表クラス**: `SaxoClient`, `OptionTrader` (`saxo_api_client.contrib.client` / `option_trader`)
 - **役割**: 人間（およびAIアシスタント）が最も直感的に使える最上位APIです。
 - **特徴**:
-  - `SaxoClient.market_order(symbol="AAPL", asset_type="Stock", amount=10)` のように、**ティッカーシンボル**での注文が可能です。
+  - 意図別 API を優先: `open_*` / `close_fifo_*` / `close_force_open_*` / `flatten_force_open` / `iter_open_positions`。
+  - レガシーの `SaxoClient.market_order(symbol="AAPL", asset_type="Stock", amount=10, IsForceOpen=False)` のように、**ティッカーシンボル**での注文も可能です。
   - 裏側で `PrimaryListing` を用いた安全なUIC自動解決ロジックが走り、Saxo特有の「複数取引所ヒット問題」を自動回避します。
   - `AccountKey` の自動注入や、複雑なオーダー辞書の構築をすべて隠蔽します。
 - **破壊的変更**: 旧 `SaxoTrader`（`contrib.trader`）は削除済みです。互換 shim はありません。`SaxoClient` に移行してください。
 
-### 2. Layer 2 (Order Builders)
-- **代表クラス**: `MarketOrder`, `LimitOrder`, `StopOrder` (`saxo_api_client.contrib.orders` など)
-- **役割**: Layer 3 の内部で使われるか、あるいは Layer 3 では対応しきれない特殊な条件の注文を構築するための中級者向けヘルパー群です。
+### 2. Layer 2 (Intent / Order Builders)
+- **代表クラス**: `PositionOpen`, `PositionClose`（推奨）。低レベルに `MarketOrder`, `LimitOrder`, `StopOrder`（`saxo_api_client.contrib.orders`）
+- **役割**: 新規建てと決済をクラスで分離し、FIFO / ForceOpen の JSON 差をファクトリ名で固定します。
 - **特徴**:
-  - 手動でパラメータを組み立てたい場合や、特定のアルゴリズムトレードで細かい制御が必要な場合に使用します。
+  - 同じ Limit/Stop でも「新規」と「決済」を取り違えないこと（ForceOpen では standalone 反対注文は偽決済になり得る）。
+  - **破壊的変更**: `MarketCloseOrder` は削除。`PositionClose.force_open_*` または `SaxoClient.close_force_open_*` へ移行。
+  - 旧ドキュメント／MCP workflow にあった「Hedging = `OrderRelation=ClosePosition` のみ」は不十分。ForceOpen の真決済は **`PositionId` + nested `Orders[]`**（SIM 検証済み）。詳細は [examples/close_position.md](examples/close_position.md)。
 
 ### 3. Layer 1 (OpenAPI FlexModels)
 - **代表クラス**: `TradeOrdersRequest` 等 (`saxo_api_client.models` 配下の自動生成 Pydantic モデル)

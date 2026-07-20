@@ -1,5 +1,7 @@
 # ReferenceData - Standard Dates
 
+> **パラメータ詳細は MCP へ**: `mcp-server-saxo-openapi`（`get_saxo_endpoint_spec` / `saxo-doc-helper`）。このファイルは **Python バインディング索引**です。
+
 標準日付（フォワードテナー日、FXオプション満期日など）に関する参照データを取得します。
 
 ## エンドポイント

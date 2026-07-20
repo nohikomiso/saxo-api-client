@@ -1,7 +1,9 @@
 # デルタヘッジワークフロー例
 
-この例では、オプションポジションのデルタを計算し、原資産（FXスポット）でヘッジ注文を出すという、より高度なワークフローを示します。
-※ デルタ計算ロジックは簡略化されたダミーです。
+オプションポジションのデルタを計算し、原資産（FX スポット）で**新規**ヘッジ注文を出す例です。
+デルタ計算は簡略化されたダミーです。
+
+決済（FIFO / ForceOpen）は [close_position.md](close_position.md) を参照。
 
 ## 前提条件
 
@@ -14,96 +16,52 @@
 import json
 from saxo_api_client import API
 import saxo_api_client.endpoints.portfolio as pf
-import saxo_api_client.endpoints.trading as tr
-from saxo_api_client.contrib.orders import MarketOrderFxSpot, tie_account_to_order
+from saxo_api_client.contrib.client import SaxoClient
+from saxo_api_client.contrib.orders import PositionOpen
 from saxo_api_client.contrib.session import account_info
 
-# 1. クライアント初期化
-# ⚠️ セキュリティ注意: トークンは環境変数から読み込むことを推奨
 token = "YOUR_ACCESS_TOKEN"
-client = API(access_token=token)
-ai = account_info(client)
-AccountKey = ai.AccountKey
+api = API(access_token=token)
+client = SaxoClient(access_token=token)
+ai = account_info(api)
+print(f"AccountKey: {ai.AccountKey}")
 
-# 2. デルタ計算関数（ダミー）
+
 def calculate_portfolio_delta(positions):
-    total_delta = 0
+    total_delta = 0.0
     for pos in positions:
-        # 実際にはここで Black-Scholes モデルなどを使用してデルタを計算します。
-        # 実用的な実装には scipy.stats.norm や mibian ライブラリなどが推奨されます。
-        # 例:
-        # import mibian
-        # c = mibian.BS([CurrentPrice, StrikePrice, InterestRate, DaysToExpiration], volatility=Vol)
-        # delta = c.callDelta if is_call else c.putDelta
-        
-        # ここではポジションの Greeks データが API から返されていると仮定
-        # または簡易的に計算
-        
-        # 例: オプションポジションの場合
-        if pos['NetPositionBase']['AssetType'] == 'FxVanillaOption':
-            # APIからGreeksが取得できる場合の例（架空のフィールド）
-            # delta = pos['Greeks']['Delta'] 
-            delta = 0.5 # ダミー値
-            amount = pos['NetPositionBase']['Amount']
+        if pos["NetPositionBase"]["AssetType"] == "FxVanillaOption":
+            delta = 0.5  # ダミー
+            amount = pos["NetPositionBase"]["Amount"]
             total_delta += delta * amount
-            
     return total_delta
 
-# 3. ポジション取得
+
 r = pf.netpositions.NetPositionsMe()
-rv = client.request(r)
-positions = rv.get('Data', [])
-
-# 4. 現在のデルタ算出
+positions = api.request(r).get("Data", [])
 current_delta = calculate_portfolio_delta(positions)
+hedge_needed = 0 - current_delta
 print(f"Current Portfolio Delta: {current_delta}")
-
-# 5. ヘッジ判断
-# 目標デルタを 0 とする（デルタニュートラル）
-target_delta = 0
-hedge_needed = target_delta - current_delta
-
 print(f"Hedge Needed: {hedge_needed}")
 
-# 閾値を設けて、小さな変動ではヘッジしない
 THRESHOLD = 1000
-
 if abs(hedge_needed) > THRESHOLD:
-    print("Executing hedge order...")
-    
-    # ヘッジ注文の作成（FXスポットでヘッジ）
-    # Uic=21 (EURUSD) と仮定
-    
-    # hedge_needed > 0 なら買い（Buy）、< 0 なら売り（Sell）
-    # MarketOrderFxSpot は Amount の符号で売買を判定
-    
-    order_spec = MarketOrderFxSpot(
-        Uic=21,
-        Amount=hedge_needed
+    buy_sell = "Buy" if hedge_needed > 0 else "Sell"
+    order = PositionOpen.market(
+        uic=21,
+        amount=abs(hedge_needed),
+        asset_type="FxSpot",
+        buy_sell=buy_sell,
+        is_force_open=False,  # ネット相殺ヘッジ。両建てで残すなら True
     )
-    
-    order_spec = tie_account_to_order(AccountKey, order_spec)
-    
-    # 注文発注
-    r_order = tr.orders.Order(data=order_spec)
-    
-    try:
-        rv_order = client.request(r_order)
-        print(f"Hedge order placed: {rv_order['OrderId']}")
-    except Exception as e:
-        print(f"Hedge order failed: {e}")
-        
+    rv_order = client.place_order(order)
+    print(f"Hedge order placed: {rv_order['OrderId']}")
 else:
     print("No hedge needed (within threshold).")
 ```
 
 ## 解説
 
-このワークフローは以下のステップを実行します：
-
-1.  **情報収集**: 現在のポートフォリオ（ポジション）情報を取得します。
-2.  **分析・計算**: 取得したポジション情報に基づいて、ポートフォリオ全体のリスク指標（ここではデルタ）を計算します。
-3.  **意思決定**: 現在のリスク指標と目標値（デルタニュートラル＝0）を比較し、ヘッジが必要な数量を算出します。
-4.  **アクション**: ヘッジが必要な場合、`contrib.orders` を使用して適切なヘッジ注文（原資産の売買）を自動的に生成し、発注します。
-
-これはアルゴリズム取引の基本的なループ（Observe -> Orient -> Decide -> Act）の一例です。
+1. Observe → Orient → Decide → Act のループ例。
+2. ヘッジは**新規／相殺の意図**を `is_force_open` で明示する。
+3. ForceOpen 建玉を「閉じる」つもりで反対成行だけを出すと偽決済になる → [close_position.md](close_position.md)。

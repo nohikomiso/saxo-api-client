@@ -1,5 +1,7 @@
 # Root Services - Subscriptions
 
+> **パラメータ詳細は MCP へ**: `mcp-server-saxo-openapi`（`get_saxo_endpoint_spec` / `saxo-doc-helper`）。このファイルは **Python バインディング索引**です。
+
 このセクションでは、ストリーミングデータの購読（Subscription）を管理するためのエンドポイントを扱います。
 
 - **購読の削除**: 特定のコンテキストIDに関連する複数のアクティブな購読を削除します。

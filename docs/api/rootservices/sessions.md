@@ -1,5 +1,7 @@
 # RootServices - Sessions
 
+> **パラメータ詳細は MCP へ**: `mcp-server-saxo-openapi`（`get_saxo_endpoint_spec` / `saxo-doc-helper`）。このファイルは **Python バインディング索引**です。
+
 ## 概要
 
 Sessionsエンドポイントは、Saxo Bank OpenAPIのセッション機能を管理するためのエンドポイント群です。セッション能力（capabilities）の取得、変更、およびリアルタイム監視のためのサブスクリプション機能を提供しています。

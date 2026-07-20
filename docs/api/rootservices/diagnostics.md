@@ -1,5 +1,7 @@
 # RootServices - Diagnostics
 
+> **パラメータ詳細は MCP へ**: `mcp-server-saxo-openapi`（`get_saxo_endpoint_spec` / `saxo-doc-helper`）。このファイルは **Python バインディング索引**です。
+
 ## 概要
 
 Diagnosticsエンドポイントは、Saxo Bank OpenAPIの接続性をテストするためのエンドポイント群です。各HTTPメソッド（GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS）に対応したエンドポイントが用意されており、API接続の検証やデバッグに使用できます。

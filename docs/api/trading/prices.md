@@ -1,5 +1,7 @@
 # Trading Prices
 
+> **パラメータ詳細は MCP へ**: `mcp-server-saxo-openapi`（`get_saxo_endpoint_spec` / `saxo-doc-helper`）。このファイルは **Python バインディング索引**です。
+
 価格のサブスクリプション、証拠金インパクトの要求、およびサブスクリプションの削除を行うためのエンドポイント群です。
 
 ## Endpoints

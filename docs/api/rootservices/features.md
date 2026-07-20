@@ -1,5 +1,7 @@
 # RootServices - Features
 
+> **パラメータ詳細は MCP へ**: `mcp-server-saxo-openapi`（`get_saxo_endpoint_spec` / `saxo-doc-helper`）。このファイルは **Python バインディング索引**です。
+
 ## 概要
 
 Featuresエンドポイントは、Saxo Bank OpenAPIで利用可能な機能の可用性を確認・監視するためのエンドポイント群です。リアルタイムでの機能可用性の変更を監視するためのサブスクリプション機能も提供されています。

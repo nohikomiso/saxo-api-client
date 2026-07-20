@@ -1,5 +1,7 @@
 # Info Prices
 
+> **パラメータ詳細は MCP へ**: `mcp-server-saxo-openapi`（`get_saxo_endpoint_spec` / `saxo-doc-helper`）。このファイルは **Python バインディング索引**です。
+
 ## 概要
 
 Info Prices（情報価格）は、金融商品の価格情報を取得するためのエンドポイント群です。単一商品・複数商品の価格取得、およびWebSocket経由での価格ストリーミング購読を管理します。

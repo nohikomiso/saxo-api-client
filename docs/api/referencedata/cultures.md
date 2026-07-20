@@ -1,5 +1,7 @@
 # ReferenceData - Cultures
 
+> **パラメータ詳細は MCP へ**: `mcp-server-saxo-openapi`（`get_saxo_endpoint_spec` / `saxo-doc-helper`）。このファイルは **Python バインディング索引**です。
+
 Saxo Bank がサポートするカルチャー（言語と地域の組み合わせ）のリストを取得します。
 
 ## エンドポイント

@@ -1,5 +1,7 @@
 # ReferenceData - Time Zones
 
+> **パラメータ詳細は MCP へ**: `mcp-server-saxo-openapi`（`get_saxo_endpoint_spec` / `saxo-doc-helper`）。このファイルは **Python バインディング索引**です。
+
 Saxo Bank がサポートするタイムゾーンのリストを取得します。
 
 ## エンドポイント

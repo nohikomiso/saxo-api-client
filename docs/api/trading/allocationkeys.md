@@ -1,5 +1,7 @@
 # Allocation Keys
 
+> **パラメータ詳細は MCP へ**: `mcp-server-saxo-openapi`（`get_saxo_endpoint_spec` / `saxo-doc-helper`）。このファイルは **Python バインディング索引**です。
+
 ## 概要
 
 Allocation Keys（配分キー）は、注文を複数のアカウント間で配分するための仕組みです。このモジュールでは、配分キーの作成、取得、削除を行うエンドポイントを提供します。

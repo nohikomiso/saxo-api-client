@@ -21,6 +21,10 @@
 
 - Low-level `MarketOrder` / `LimitOrder` / `StopOrder` docstrings: prefer PositionOpen;
   forbid using them to close ForceOpen legs.
+- Human docs: README (EN/JA), `docs/README.md`, quickstart, MIGRATION, samples README —
+  open vs close / PositionOpen·PositionClose guidance.
+- `docs/api/` reframed as Python binding index (MCP for OpenAPI params); examples fixed for
+  `IsForceOpen` / `PositionOpen`.
 
 ## 1.1.0 — 2026-07-19
 

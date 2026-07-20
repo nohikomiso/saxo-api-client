@@ -9,7 +9,7 @@
 |---|---|---|
 | **Core Trading & Lifecycle** | | |
 | `verify_lifecycle_trading.py` | Req/Res | 注文の完全なライフサイクル（発注 → 詳細取得 → キャンセル）を検証します。 |
-| `verify_cycle_trading_full.py` | Req/Res | 成行注文での完全な取引サイクル（発注 → ポジション確認 → クローズ）の実践的サンプルです。 |
+| `verify_cycle_trading_full.py` | Req/Res | 成行での取引サイクル（発注 → ポジション確認 → `PositionClose.force_open_market` でクローズ）の実践的サンプルです。 |
 | `verify_scenario_options_cfd.py` | Streaming | オプションおよびCFDの取引シナリオ（検索 → オプションチェーン取得(Sub) → 発注）を検証します。 |
 | `verify_orders_live.py` | Req/Res | 様々な注文タイプ（指値、逆指値、ストップリミット）の実践的な発注サンプルです。 |
 | `verify_orders_precheck.py` | Req/Res | 注文前の事前チェック（PreCheck）機能のサンプルです。 |

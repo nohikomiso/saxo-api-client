@@ -1,5 +1,7 @@
 # Users (Portfolio)
 
+> **パラメータ詳細は MCP へ**: `mcp-server-saxo-openapi`（`get_saxo_endpoint_spec` / `saxo-doc-helper`）。このファイルは **Python バインディング索引**です。
+
 Portfolio Users エンドポイントは、ユーザー情報を取得および管理するための機能を提供します。
 
 ## エンドポイント一覧

@@ -1,5 +1,7 @@
 # Trade Messages
 
+> **パラメータ詳細は MCP へ**: `mcp-server-saxo-openapi`（`get_saxo_endpoint_spec` / `saxo-doc-helper`）。このファイルは **Python バインディング索引**です。
+
 ## 概要
 
 Trade Messages（取引メッセージ）は、取引に関するメッセージの取得・管理・購読を行うエンドポイント群です。取引実行時の確認メッセージやアラートなどを処理します。

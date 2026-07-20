@@ -1,41 +1,27 @@
 # {モジュール名}
 
+> **パラメータ詳細は MCP へ**: `mcp-server-saxo-openapi` の `get_saxo_endpoint_spec` / `saxo-doc-helper`。
+> このファイルは **Python バインディング索引**（クラス名・path・最小例）です。
+
 {モジュールの説明}
 
 ## エンドポイント
 
-### {エンドポイントクラス名}
+| クラス | Method | Path |
+|--------|--------|------|
+| `{EndpointClassName}` | `{method}` | `{url}` |
 
-{エンドポイントの説明}
-
-- **URL**: `{url}`
-- **メソッド**: `{method}`
-
-#### リクエスト
-
-**パラメータ**
-
-| 名前 | 型 | 必須 | 説明 |
-|------|------|----------|----------------|
-| ...  | ...  | ...      | ...            |
-
-**ボディ**
-
-[リクエストボディスキーマ](../../schemas/{category}/{subcategory}/{endpoint}_body.json)
-
-#### レスポンス
-
-[レスポンススキーマ](../../schemas/{category}/{subcategory}/{endpoint}_response.json)
-
-#### 実行例
+## 最小例
 
 ```python
 import saxo_api_client
 import saxo_api_client.endpoints.{category} as {category}
-import json
 
-client = saxo_api_client.API(access_token=...)
+client = saxo_api_client.API(access_token="YOUR_ACCESS_TOKEN")
 r = {category}.{subcategory}.{EndpointClassName}(...)
 client.request(r)
-print(json.dumps(r.response, indent=2))
 ```
+
+## スキーマ（任意）
+
+[schemas/](../../schemas/) 配下の JSON。通常の学習では MCP を優先。

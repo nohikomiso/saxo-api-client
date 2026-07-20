@@ -1,6 +1,11 @@
 # API リファレンス
 
-saxo_api_client ライブラリの全エンドポイント索引
+> **パラメータ詳細は MCP へ**: `mcp-server-saxo-openapi`（`get_saxo_endpoint_spec` / `saxo-doc-helper`）。このファイルは **Python バインディング索引**です。
+
+saxo_api_client ライブラリの全エンドポイント索引（**Python バインディング**）。
+
+> **OpenAPI パラメータ／ネストスキーマの正本は MCP**（`mcp-server-saxo-openapi` の `get_saxo_endpoint_spec` / `get_saxo_schema_spec`）。
+> 取引の呼び出し方は [contrib/](../contrib/) と [examples/](../examples/)（特に [close_position.md](../examples/close_position.md)）。
 
 ## 概要
 

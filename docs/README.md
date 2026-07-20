@@ -10,10 +10,22 @@ Saxo Bank OpenAPI の Python クライアントライブラリ
 
 - **103+ エンドポイント**: ポートフォリオ管理、取引実行、参照データ取得など、幅広い機能をカバー
 - **8つのカテゴリ**: Portfolio, Trading, ReferenceData, AccountHistory, RootServices, Chart, EventNotificationServices, ValueAdd
-- **Contrib モジュール**: 注文作成を簡素化するヘルパークラス群 (`MarketOrder`, `LimitOrder`, `OptionTrader` など)
+- **Contrib モジュール**: 意図別の注文ビルダー（`PositionOpen` / `PositionClose`）と `SaxoClient` / `OptionTrader`。低レベルに `MarketOrder` / `LimitOrder` など
 - **WebSocket Streaming**: リアルタイム価格配信とポジション更新
 - **包括的なドキュメント**: 全エンドポイントの日本語ドキュメント、JSON Schema、実行可能なコード例
 - **AI ナビゲーション**: `.ai/index.json` による構造化メタデータで効率的なエンドポイント検索
+
+## ドキュメントの役割分担
+
+| 読む場所 | 用途 |
+|----------|------|
+| **この `docs/`（contrib / examples）** | このライブラリの**呼び出し方**（`SaxoClient` / `PositionOpen` / `PositionClose`） |
+| **`saxo_api_client agent-guide`（GUIDE.md）** | AI エージェント向け短縮正本（インストール済みパッケージ同梱） |
+| **MCP `mcp-server-saxo-openapi`** | OpenAPI エンドポイント／スキーマ／生 API の pitfalls（ネストパラメータの正本） |
+| **`docs/api/`** | Python バインディング索引（クラス名・path）。パラメータ詳細は MCP へ |
+| **`docs/schemas/`** | 検証用 JSON Schema。通常の学習では開かない（MCP 優先） |
+
+決済（FIFO vs ForceOpen）の手順は [examples/close_position.md](examples/close_position.md) と [contrib/orders.md](contrib/orders.md) に集約しています。入れ子 JSON の長文説明を他ファイルへ複製しないでください。
 
 ## インストール
 
@@ -43,7 +55,7 @@ docs/
 ├── quickstart.md          # 5分チュートリアル
 ├── authentication.md      # 認証設定ガイド
 │
-├── api/                   # API リファレンス
+├── api/                   # Python バインディング索引（詳細は MCP）
 │   ├── README.md          # API 全体索引
 │   ├── portfolio/         # ポートフォリオ管理
 │   ├── trading/           # 取引実行
@@ -52,7 +64,7 @@ docs/
 │   └── rootservices/      # システムサービス
 │
 ├── contrib/               # Contrib モジュールドキュメント
-│   ├── orders.md          # 注文ヘルパークラス
+│   ├── orders.md          # PositionOpen / PositionClose（意図別）
 │   ├── client.md          # SaxoClient (FX/Stock/CFD)
 │   ├── trader.md          # 廃止案内（→ client.md）
 │   ├── option_trader.md   # OptionTrader & OptionFinder
@@ -62,10 +74,11 @@ docs/
 ├── examples/              # ワークフロー例
 │   ├── check_balance.md
 │   ├── place_market_order.md
+│   ├── close_position.md
 │   ├── websocket_streaming.md
 │   └── ...
 │
-└── schemas/               # JSON Schema (レスポンス例)
+└── schemas/               # JSON Schema（検証用・人間の主読物ではない）
     ├── portfolio/
     ├── trading/
     └── ...
@@ -101,6 +114,7 @@ docs/
 
 - [残高確認](examples/check_balance.md)
 - [成行注文の発注](examples/place_market_order.md)
+- [ポジション決済](examples/close_position.md)（`PositionClose` / FIFO vs ForceOpen）
 - [ポジション監視](examples/monitor_positions.md)
 - [WebSocket ストリーミング](examples/websocket_streaming.md)
 - [デルタヘッジワークフロー](examples/delta_hedging_workflow.md)

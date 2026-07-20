@@ -1,5 +1,7 @@
 # Root Services - User
 
+> **パラメータ詳細は MCP へ**: `mcp-server-saxo-openapi`（`get_saxo_endpoint_spec` / `saxo-doc-helper`）。このファイルは **Python バインディング索引**です。
+
 このセクションでは、現在のユーザー情報を取得するためのエンドポイントを扱います。
 
 ---

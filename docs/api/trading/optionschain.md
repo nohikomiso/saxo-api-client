@@ -1,5 +1,7 @@
 # Options Chain
 
+> **パラメータ詳細は MCP へ**: `mcp-server-saxo-openapi`（`get_saxo_endpoint_spec` / `saxo-doc-helper`）。このファイルは **Python バインディング索引**です。
+
 ## 概要
 
 Options Chain（オプションチェーン）は、オプション契約の購読管理を行うエンドポイント群です。WebSocket経由でオプションチェーンデータのリアルタイム更新を受信する購読の作成・変更・削除・リセットを管理します。

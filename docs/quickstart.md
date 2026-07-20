@@ -78,6 +78,7 @@ for account_data in rv.get('Data', []):
 実際のユースケースに基づいた例:
 
 - [成行注文の発注](examples/place_market_order.md)
+- [ポジション決済](examples/close_position.md)
 - [ポジション監視](examples/monitor_positions.md)
 - [WebSocket ストリーミング](examples/websocket_streaming.md)
 
@@ -91,26 +92,24 @@ for account_data in rv.get('Data', []):
 
 ### Contrib モジュールを活用
 
-注文作成を簡素化するヘルパークラス:
+新規建ては `PositionOpen`、決済は `PositionClose`（または `SaxoClient.open_*` / `close_*`）を使います。
 
 ```python
-from saxo_api_client.contrib.orders import (
-    MarketOrderFxSpot,
-    TakeProfitDetails,
-    StopLossDetails,
-    tie_account_to_order
-)
+from saxo_api_client.contrib.orders import PositionOpen, TakeProfitDetails, StopLossDetails
 
-# EURUSD 買い注文 (TP/SL 付き)
-order = MarketOrderFxSpot(
-    Uic=21,
-    Amount=10000,
-    TakeProfitOnFill=TakeProfitDetails(price=1.14),
-    StopLossOnFill=StopLossDetails(price=1.12)
+# EURUSD 新規買い (TP/SL 付き) — is_force_open は必須
+order = PositionOpen.market(
+    uic=21,
+    amount=10000,
+    asset_type="FxSpot",
+    buy_sell="Buy",
+    is_force_open=False,
+    take_profit_on_fill=TakeProfitDetails(price=1.14),
+    stop_loss_on_fill=StopLossDetails(price=1.12),
 )
 ```
 
-詳細は [Contrib Orders ドキュメント](contrib/orders.md) をご覧ください。
+ForceOpen 決済や FIFO 相殺の選び方は [Contrib Orders](contrib/orders.md) と [ポジション決済例](examples/close_position.md) を参照してください。
 
 ## トラブルシューティング
 

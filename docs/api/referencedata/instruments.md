@@ -1,5 +1,7 @@
 # ReferenceData Instruments
 
+> **パラメータ詳細は MCP へ**: `mcp-server-saxo-openapi`（`get_saxo_endpoint_spec` / `saxo-doc-helper`）。このファイルは **Python バインディング索引**です。
+
 金融商品の情報を取得するためのエンドポイント群です。商品の検索、詳細情報の取得、オプション空間、先物空間、取引スケジュールなどの情報にアクセスできます。
 
 ## Endpoints

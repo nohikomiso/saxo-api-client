@@ -1,6 +1,8 @@
 # Trading カテゴリ
 
-取引実行のためのエンドポイント群
+取引実行のためのエンドポイント群（Python バインディング索引）。
+
+> **パラメータ詳細は MCP**。注文組み立ては [contrib/orders.md](../../contrib/orders.md) / [examples/](../../examples/)。
 
 ## 概要
 

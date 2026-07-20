@@ -1,5 +1,7 @@
 # Chart Services
 
+> **パラメータ詳細は MCP へ**: `mcp-server-saxo-openapi`（`get_saxo_endpoint_spec` / `saxo-doc-helper`）。このファイルは **Python バインディング索引**です。
+
 このセクションでは、チャートデータの取得と購読を管理するためのエンドポイントを扱います。
 
 ---

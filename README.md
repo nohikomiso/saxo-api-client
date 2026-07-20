@@ -114,15 +114,30 @@ print("Balance:", balance)
 # Safely check if the market is open and the order is accepted
 if client.is_order_accepted(symbol="AAPL", asset_type=AssetType.CfdOnStock, order_type=OrderType.Market):
     # Place a market order without worrying about Uic resolution
+    # Prefer client.open_* when intent is explicitly "open a new position"
     response = client.market_order(
         symbol="AAPL",
         amount=10,
-        asset_type=AssetType.CfdOnStock
+        asset_type=AssetType.CfdOnStock,
+        IsForceOpen=False,
     )
     print("Order placed:", response)
 else:
     print("Market is closed or order type not accepted.")
 ```
+
+### Opening vs closing positions (important)
+
+The same order *type* (limit / stop) can mean **open a new leg** or **close an existing one**. Saxo’s ForceOpen (hedge) mode makes this easy to get wrong: a standalone opposite stop/limit often **opens a short/long** instead of closing.
+
+| Intent | Prefer |
+|--------|--------|
+| Open new (market / limit / stop) | `client.open_market` / `open_limit` / `open_stop` (`is_force_open` required), or Layer 2 `PositionOpen` |
+| Close FIFO / netting | `client.close_fifo_market` / `close_fifo_limit` / `close_fifo_stop`, or `PositionClose.fifo_*` |
+| Close ForceOpen leg | `client.close_force_open_*` (`position_id` from `iter_open_positions`), or `PositionClose.force_open_*` |
+| Clear FO residue | `client.flatten_force_open` |
+
+Do **not** use bare `MarketOrder` / `LimitOrder` / `StopOrder` to “close” ForceOpen positions. Details: [docs/contrib/orders.md](docs/contrib/orders.md), [docs/examples/close_position.md](docs/examples/close_position.md), [docs/contrib/client.md](docs/contrib/client.md).
 
 ### API Request/Response Tracing (For Research and Debugging)
 
@@ -149,11 +164,13 @@ client = API(access_token=token, trace_dir="api_traces")  # Can also be enabled 
 To shield developers from the complexity of Saxo Bank's APIs (such as mandatory `AccountKey` injection and resolving Tickers to numeric `Uic`s), this library provides a robust 3-Tier Architecture.
 
 - **Layer 3 (High-Level API - Recommended)**: `SaxoClient`, `OptionTrader`
-  - Primary facade for trading. Prefer `SaxoClient` for FX / Stock / CFD (`market_order`, `limit_order`, `stop_order`, …) and `OptionTrader` for options.
+  - Primary facade for trading. Prefer intent methods on `SaxoClient`: `open_*`, `close_fifo_*`, `close_force_open_*`, `flatten_force_open`, `iter_open_positions`.
+  - Legacy one-liners (`market_order`, `limit_order`, `stop_order`, …) remain for simple cases; do not use them to close ForceOpen legs.
   - Resolves tickers (Symbol) to `Uic` (including `PrimaryListing` fallback when multiple hits occur).
   - Injects `AccountKey` and builds nested order parameters. (`SaxoTrader` was removed; do not import it.)
-- **Layer 2 (Order Builders)**: `MarketOrder`, `LimitOrder`, `StopOrder`, etc.
-  - Used for advanced customization when Layer 3 does not cover an edge case (or with `SaxoClient.validate_order` / `place_order`).
+- **Layer 2 (Intent / order builders)**: `PositionOpen`, `PositionClose` (preferred); low-level `MarketOrder`, `LimitOrder`, `StopOrder`, etc.
+  - Choose by **intent** (open vs close, FIFO vs ForceOpen), not only by order type.
+  - `MarketCloseOrder` was removed; use `PositionClose.force_open_*`.
 - **Layer 1 (OpenAPI FlexModels)**: Pydantic `_FlexModel` (`TradeOrdersRequest`, etc.)
   - Schema validation before requests are sent. Developers rarely interact with this layer directly.
 - **Layer 0 (Transport)**: `API`, `SaxoAuthClient`, `endpoints.*`

@@ -7,7 +7,7 @@ from .client import API
 from .definitions.orders import AssetType, OrderType, OrderDurationType, Direction
 
 # バージョン情報
-__version__ = "1.0.0"
+__version__ = "1.2.0"
 
 # APIを直接インポートできるようにする
 __all__ = [

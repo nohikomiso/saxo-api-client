@@ -16,6 +16,7 @@
   `flatten_force_open`.
 - Agent GUIDE / orders.md purpose decision table (open vs close, FIFO vs ForceOpen).
 - MCP pitfalls section on ForceOpen fake flatten.
+- CLI: `saxo-api-client --version` (reports package `__version__`).
 
 ### Changed
 
@@ -25,6 +26,8 @@
   open vs close / PositionOpen·PositionClose guidance.
 - `docs/api/` reframed as Python binding index (MCP for OpenAPI params); examples fixed for
   `IsForceOpen` / `PositionOpen`.
+- Sample `verify_cycle_trading_full.py`: open via `PositionOpen.market` (ForceOpen) to match
+  `PositionClose.force_open_market` close path.
 
 ## 1.1.0 — 2026-07-19
 

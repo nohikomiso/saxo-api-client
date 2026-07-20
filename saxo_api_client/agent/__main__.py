@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import sys
 
+from saxo_api_client import __version__
 from saxo_api_client.agent import read_guide, write_guide
 
 
@@ -17,6 +18,11 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="saxo-api-client",
         description="saxo-api-client utilities for humans and AI agents",
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"saxo-api-client {__version__}",
     )
     sub = parser.add_subparsers(dest="command", required=True)
 

@@ -3,9 +3,9 @@
 Full Trading Cycle Verification Sample (Market Order)
 
 This sample demonstrates a complete trading cycle with execution:
-1. Setup: Place a Market Buy order (Instant execution)
+1. Setup: Place a ForceOpen Market Buy via PositionOpen
 2. Verify: Confirm Position creation
-3. Close: Place a Market Close order (Exclusive Close)
+3. Close: Explicit ForceOpen close via PositionClose.force_open_market
 4. Teardown: Verify Position is closed
 
 WARNING: This executes a MARKET ORDER which will trade immediately.
@@ -25,7 +25,7 @@ import saxo_api_client.endpoints.portfolio as pf
 import saxo_api_client.endpoints.trading as tr
 from dotenv import load_dotenv
 from saxo_api_client import API
-from saxo_api_client.contrib.orders import MarketOrderFxSpot, tie_account_to_order
+from saxo_api_client.contrib.orders import PositionClose, PositionOpen, tie_account_to_order
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -47,13 +47,19 @@ def main() -> None:
         r_accounts = pf.accounts.AccountsMe()
         client.request(r_accounts)
         account_key = r_accounts.response["Data"][0]["AccountKey"]
-        client_key = r_accounts.response["Data"][0]["ClientKey"]
         logger.info(f"AccountKey: {account_key}")
 
-        # 2. Open Position: Place a Market Buy order for USDJPY (Uic 42)
-        logger.info("Step 2: Opening a Long position for USDJPY (Market Order)...")
-        mo = MarketOrderFxSpot(Uic=42, Amount=10000, ExternalReference="full_cycle_test_open")
-        order_data = tie_account_to_order(account_key, mo)
+        # 2. Open Position: ForceOpen Market Buy for USDJPY (Uic 42)
+        logger.info("Step 2: Opening a ForceOpen Long for USDJPY (PositionOpen.market)...")
+        open_order = PositionOpen.market(
+            uic=42,
+            amount=10000,
+            asset_type="FxSpot",
+            buy_sell="Buy",
+            is_force_open=True,
+            external_reference="full_cycle_test_open",
+        )
+        order_data = tie_account_to_order(account_key, open_order)
         r_order = tr.orders.Order(data=order_data)
         client.request(r_order)
         order_id = r_order.response["OrderId"]
@@ -80,11 +86,8 @@ def main() -> None:
             logger.error("Failed to find the opened position.")
             return
 
-        # 4. Close Position: Place a Market Close order (Exclusive Close)
-        logger.info(f"Step 4: Closing position {position_id} (Market Close Order)...")
-
-        # Explicit ForceOpen / per-leg close: PositionId + nested Orders
-        from saxo_api_client.contrib.orders import PositionClose
+        # 4. Close: PositionId + nested Orders (ForceOpen explicit close)
+        logger.info(f"Step 4: Closing ForceOpen position {position_id} (PositionClose.force_open_market)...")
 
         close_order = PositionClose.force_open_market(
             position_id=position_id,
@@ -126,7 +129,13 @@ def main() -> None:
         else:
             logger.info(f"Position {position_id} has been successfully closed.")
 
-        result = {"status": "success" if not still_exists else "failed", "open_order_id": order_id, "position_id": position_id, "close_order_id": close_order_id, "final_status": "Closed" if not still_exists else "Still Open"}
+        result = {
+            "status": "success" if not still_exists else "failed",
+            "open_order_id": order_id,
+            "position_id": position_id,
+            "close_order_id": close_order_id,
+            "final_status": "Closed" if not still_exists else "Still Open",
+        }
         print(json.dumps(result, indent=2))
 
     except Exception as e:

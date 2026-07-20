@@ -314,3 +314,87 @@ class TestSaxoClientFacade:
         placed = exec_mock.call_args[0][0]
         assert placed.mode == "clear_force_open"
         assert placed.data["ClearForceOpen"] is True
+
+    def test_open_limit_and_stop_place_builders(self) -> None:
+        client = self._client()
+        with patch.object(client, "_execute_order", return_value={"OrderId": "1"}) as exec_mock:
+            client.open_limit(
+                asset_type="FxSpot",
+                uic=42,
+                amount=10000,
+                buy_sell="Buy",
+                order_price=150.0,
+                is_force_open=True,
+            )
+        placed = exec_mock.call_args[0][0]
+        assert placed.mode == "limit"
+        assert placed.data["IsForceOpen"] is True
+        assert placed.data["OrderPrice"] == 150.0
+
+        with patch.object(client, "_execute_order", return_value={"OrderId": "2"}) as exec_mock:
+            client.open_stop(
+                asset_type="FxSpot",
+                uic=42,
+                amount=10000,
+                buy_sell="Sell",
+                order_price=149.0,
+                is_force_open=False,
+            )
+        placed = exec_mock.call_args[0][0]
+        assert placed.mode == "stop"
+        assert placed.data["IsForceOpen"] is False
+
+    def test_close_fifo_market_places_builder(self) -> None:
+        client = self._client()
+        with patch.object(client, "_execute_order", return_value={"OrderId": "3"}) as exec_mock:
+            client.close_fifo_market(
+                asset_type="FxSpot",
+                uic=42,
+                amount=10000,
+                buy_sell="Sell",
+            )
+        placed = exec_mock.call_args[0][0]
+        assert placed.mode == "fifo_market"
+        assert "PositionId" not in placed.data
+
+    def test_close_force_open_limit_and_stop(self) -> None:
+        client = self._client()
+        fo_row = {
+            "position_id": "POS-1",
+            "uic": 42,
+            "asset_type": "FxSpot",
+            "amount": 10000.0,
+            "buy_sell": "Buy",
+            "is_force_open": True,
+        }
+        with (
+            patch.object(client, "iter_open_positions", return_value=[fo_row]),
+            patch.object(client, "_execute_order", return_value={"OrderId": "4"}) as exec_mock,
+        ):
+            client.close_force_open_limit(
+                position_id="POS-1",
+                asset_type="FxSpot",
+                uic=42,
+                amount=10000,
+                buy_sell="Sell",
+                order_price=150.0,
+            )
+        placed = exec_mock.call_args[0][0]
+        assert placed.mode == "force_open_limit"
+        assert placed.data["Orders"][0]["OrderPrice"] == 150.0
+
+        with (
+            patch.object(client, "iter_open_positions", return_value=[fo_row]),
+            patch.object(client, "_execute_order", return_value={"OrderId": "5"}) as exec_mock,
+        ):
+            client.close_force_open_stop(
+                position_id="POS-1",
+                asset_type="FxSpot",
+                uic=42,
+                amount=10000,
+                buy_sell="Sell",
+                order_price=149.5,
+            )
+        placed = exec_mock.call_args[0][0]
+        assert placed.mode == "force_open_stop"
+        assert placed.data["Orders"][0]["OrderType"] == OD.OrderType.Stop
